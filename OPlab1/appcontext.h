@@ -6,7 +6,8 @@ struct AppContext {
     int inputNumSystem;
     int outputNumSystem;
     const char* translatedValue;
-    char errorLine[100];
+    char errorLine[200];
+    int errorCode;
 };
 
 #endif // APPCONTEXT_H

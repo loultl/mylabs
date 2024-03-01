@@ -10,6 +10,8 @@ enum Operation
     InputOfInputNumSystem,
     InputOfOutputNumSystem,
     InputOfValue,
+    Validation,
+    FillErrorLine,
     Translate
 };
 

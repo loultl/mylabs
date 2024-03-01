@@ -20,7 +20,6 @@ void initialize(AppContext* context);
 void inputOfInputNumSystem(AppContext* context, int inputNumSys);
 void inputOfOutputNumSystem(AppContext* context, int ouputNumSys);
 void inputOfValue(AppContext* context, const char* newValue);
-char* isValidInput(const char* input, AppContext* context);
 void translate(AppContext* context, const char* newValue);
 
 char* decimalToBinary(const char* decimalStr);

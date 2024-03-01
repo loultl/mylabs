@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->outOctSys, &QPushButton::clicked, this, &MainWindow::onOutputOctSystemClicked);
     connect(ui->outDecSys, &QPushButton::clicked, this, &MainWindow::onOutputDecSystemClicked);
     connect(ui->translateButton, &QPushButton::clicked, this, &MainWindow::onTranslateClicked);
+    doOperation(Initialization, &context, nullptr);
 
     updateLabel();
 }
@@ -70,23 +71,16 @@ void MainWindow::onTranslateClicked()
 {
     std::string str = ui->inputValue->text().toStdString();
     const char* cStr = str.c_str();
-    const char* error = isValidInput(cStr, &context);
-    if (error)
-    {
-        snprintf(context.errorLine, sizeof(context.errorLine), "Ошибка: %s", error);
-        updateLabel();
-        return;
-    }
     AppParams* param = (AppParams*)malloc(sizeof(AppParams));
-    if (param == nullptr)
-    {
-        snprintf(context.errorLine, sizeof(context.errorLine), "Ошибка: Ошибка выделения памяти для параметров");
-        updateLabel();
-        return;
-    }
     param->newValue = cStr;
     doOperation(InputOfValue, &context, param);
-    doOperation(Translate, &context, param);
+//something wrong with setErrorCode function
+    doOperation(Validation, &context, param);
+    if (context.errorCode != 0) {
+        doOperation(FillErrorLine, &context, param);
+    } else {
+        doOperation(Translate, &context, param);
+    }
     updateLabel();
     free(param);
 }

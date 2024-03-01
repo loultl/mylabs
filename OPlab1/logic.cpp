@@ -14,6 +14,7 @@ char* intToString(long long value) {
 
 void initialize(AppContext* context) {
     context->translatedValue = DEFAULT_VALUE;
+    context->errorCode = DEFAULT_VALUE;
     strcpy(context->errorLine, ERROR_LINE);
 }
 
@@ -27,36 +28,6 @@ void inputOfOutputNumSystem(AppContext* context, int outputNumSys) {
 
 void inputOfValue(AppContext* context, const char* newValue) {
     context->translatedValue = newValue;
-}
-
-char* isValidInput(const char* input, AppContext* context) {
-    if (context->inputNumSystem == 10) {
-        for (int i = 0; input[i] != '\0'; ++i) {
-            if ((i == 0 && !(input[i] == '-' || isdigit(input[i]))) || (i > 0 && !isdigit(input[i]))) {
-                return "Недопустимый ввод для выбранной системы счисления";
-            }
-            else if (stringToInt(input) > pow(2, BIT_LIMIT) || stringToInt(input) < -pow(2, BIT_LIMIT)) {
-                return "Входное значение выходит за пределы 4-байтового знакового числа";
-            }
-        }
-    } else if (context->inputNumSystem == 2) {
-        for (int i = 0; input[i] != '\0'; ++i) {
-            if (input[i] != '0' && input[i] != '1') {
-                return "Недопустимый ввод для выбранной системы счисления";
-            }
-            else if (strlen(input) > BIT_LIMIT + 1)
-                return "Входное значение выходит за пределы 4-байтового знакового числа";
-        }
-    } else if (context->inputNumSystem == 8) {
-        for (int i = 0; input[i] != '\0'; ++i) {
-            if (input[i] < '0' || input[i] > '7') {
-                return "Недопустимый ввод для выбранной системы счисления";
-            }
-            else if (strlen(input) > (BIT_LIMIT + 1) / 3 + 1)
-                return "Входное значение выходит за пределы 4-байтового знакового числа";
-        }
-    }
-    return nullptr;
 }
 
 void translate(AppContext* context, const char* newValue) {
