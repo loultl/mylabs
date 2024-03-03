@@ -17,7 +17,7 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
         inputOfValue(context, params->newValue);
         break;
     case Validation:
-        setErrorCode(context, params->newValue, params->inputNumSystem);
+        setErrorCode(context, params->newValue);
         break;
     case FillErrorLine:
         setError(context);

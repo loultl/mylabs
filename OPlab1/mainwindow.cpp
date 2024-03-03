@@ -74,22 +74,28 @@ void MainWindow::onTranslateClicked()
     AppParams* param = (AppParams*)malloc(sizeof(AppParams));
     param->newValue = cStr;
     doOperation(InputOfValue, &context, param);
-//something wrong with setErrorCode function
     doOperation(Validation, &context, param);
-    if (context.errorCode != 0) {
+    if (context.errorCode != 0)
+    {
         doOperation(FillErrorLine, &context, param);
-    } else {
+    }
+    else
+    {
         doOperation(Translate, &context, param);
     }
     updateLabel();
     free(param);
 }
 
-void MainWindow::updateLabel() {
-    if (context.errorLine[0] != '\0') {
+void MainWindow::updateLabel()
+{
+    if (context.errorCode != 0)
+    {
         ui->errorLine->setText(QString::fromUtf8(context.errorLine));
         ui->translatedValue->clear();
-    } else {
+    }
+    else
+    {
         ui->errorLine->clear();
         ui->translatedValue->setText(QString::fromUtf8(context.translatedValue));
     }
