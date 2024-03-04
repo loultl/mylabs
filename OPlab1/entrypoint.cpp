@@ -25,5 +25,8 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
     case Translate:
         translate(context, params->newValue);
         break;
+    case Swap:
+        swap(context);
+        break;
     }
 }

@@ -6,6 +6,7 @@
 
 void setErrorCode(AppContext* context, const char* input)
 {
+    context->errorCode = 0;
     if (context->inputNumSystem == 10)
     {
         for (int i = 0; input[i] != '\0'; ++i)
@@ -17,14 +18,10 @@ void setErrorCode(AppContext* context, const char* input)
             else if (stringToInt(input) > pow(2, BIT_LIMIT) || stringToInt(input) < -pow(2, BIT_LIMIT))
             {
                 context->errorCode = 20;
-            }
-            else
-            {
-                context->errorCode = 0;
-            }
+            }        
         }
     }
-    if (context->inputNumSystem == 2)
+    else if (context->inputNumSystem == 2)
     {
         for (int i = 0; input[i] != '\0'; ++i)
         {
@@ -36,13 +33,9 @@ void setErrorCode(AppContext* context, const char* input)
             {
                 context->errorCode = 20;
             }
-            else
-            {
-                context->errorCode = 0;
-            }
         }
     }
-    if (context->inputNumSystem == 8)
+    else if (context->inputNumSystem == 8)
     {
         for (int i = 0; input[i] != '\0'; ++i)
         {
@@ -54,11 +47,16 @@ void setErrorCode(AppContext* context, const char* input)
             {
                 context->errorCode = 20;
             }
-            else
-            {
-                context->errorCode = 0;
-            }
         }
+    }
+    if (context->errorCode == 0)
+    {
+        if (context->inputNumSystem == 0 && context->outputNumSystem == 0)
+            context->errorCode = 3;
+        if (context->inputNumSystem != 0 && context->outputNumSystem == 0)
+            context->errorCode = 2;
+        if (context->inputNumSystem == 0 && context->outputNumSystem != 0)
+            context->errorCode = 1;
     }
 }
 
@@ -66,6 +64,15 @@ void setError(AppContext* context)
 {
     switch(context->errorCode)
     {
+    case(1):
+        strcpy(context->errorLine, "Не выбрана входная система счисления");
+        break;
+    case(2):
+        strcpy(context->errorLine, "Не выбрана выходная система счисления");
+        break;
+    case(3):
+        strcpy(context->errorLine, "Не выбраны системы счисления");
+        break;
     case(10):
         strcpy(context->errorLine, "Введена недопустимая комбинация символов для выбранной системы счисления");
         break;

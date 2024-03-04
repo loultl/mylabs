@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    doOperation(Initialization, &context, nullptr);
     connect(ui->inBinSys, &QPushButton::clicked, this, &MainWindow::onInputBinSystemClicked);
     connect(ui->inOctSys, &QPushButton::clicked, this, &MainWindow::onInputOctSystemClicked);
     connect(ui->inDecSys, &QPushButton::clicked, this, &MainWindow::onInputDecSystemClicked);
@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->outOctSys, &QPushButton::clicked, this, &MainWindow::onOutputOctSystemClicked);
     connect(ui->outDecSys, &QPushButton::clicked, this, &MainWindow::onOutputDecSystemClicked);
     connect(ui->translateButton, &QPushButton::clicked, this, &MainWindow::onTranslateClicked);
-    doOperation(Initialization, &context, nullptr);
+
 
     updateLabel();
 }

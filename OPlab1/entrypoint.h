@@ -12,7 +12,8 @@ enum Operation
     InputOfValue,
     Validation,
     FillErrorLine,
-    Translate
+    Translate,
+    Swap
 };
 
 struct AppParams {

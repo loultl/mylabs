@@ -11,7 +11,7 @@
 #define DEFAULT_VALUE 0
 #define ERROR_LINE ""
 #define BYTE_LIMIT 4
-#define BIT_LIMIT (BYTE_LIMIT * 8 - 1)
+#define BIT_LIMIT (BYTE_LIMIT * 8)
 #define BIT_LIMIT_OCTAL (BIT_LIMIT / 3 + 1)
 
 long long stringToInt(const char *str);
@@ -21,6 +21,7 @@ void inputOfInputNumSystem(AppContext* context, int inputNumSys);
 void inputOfOutputNumSystem(AppContext* context, int ouputNumSys);
 void inputOfValue(AppContext* context, const char* newValue);
 void translate(AppContext* context, const char* newValue);
+void swap(AppContext* context);
 
 char* decimalToBinary(const char* decimalStr);
 char* decimalToOctal(const char* decimalStr);
