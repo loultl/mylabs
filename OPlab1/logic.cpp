@@ -1,18 +1,8 @@
 #include "logic.h"
 
-long long stringToInt(const char *str)
+int stringToInt(const char *str)
 {
-    return atoll(str);
-}
-
-char* intToString(long long value)
-{
-    char* buffer = (char*)malloc(64);
-    if (buffer != NULL)
-    {
-        snprintf(buffer, 64, "%lld", value);
-    }
-    return buffer;
+    return atoi(str);
 }
 
 void initialize(AppContext* context)
@@ -36,7 +26,7 @@ void inputOfOutputNumSystem(AppContext* context, int outputNumSys)
 
 void inputOfValue(AppContext* context, const char* newValue)
 {
-    context->translatedValue = newValue;
+    context->inputValue = newValue;
 }
 
 void translate(AppContext* context, const char* newValue)
@@ -49,41 +39,38 @@ void translate(AppContext* context, const char* newValue)
     }
     else if (context->inputNumSystem == 10 && context->outputNumSystem == 2)
     {
-        context->translatedValue = decimalToBinary(newValue);
+        context->translatedValue = decToBin(newValue);
     }
     else if (context->inputNumSystem == 10 && context->outputNumSystem == 8)
     {
-        context->translatedValue = decimalToOctal(newValue);
+        context->translatedValue = decToOct(newValue);
     }
     else if (context->inputNumSystem == 2 && context->outputNumSystem == 10)
     {
-        context->translatedValue = binaryToDecimal(newValue);
+        context->translatedValue = toDec(newValue, context->inputNumSystem);
     }
     else if (context->inputNumSystem == 2 && context->outputNumSystem == 8)
     {
-        context->translatedValue = binaryToOctal(newValue);
+        context->translatedValue = binToOct(newValue);
     }
     else if (context->inputNumSystem == 8 && context->outputNumSystem == 10)
     {
-        context->translatedValue = octalToDecimal(newValue);
+        context->translatedValue = toDec(newValue, context->inputNumSystem);
     }
     else if (context->inputNumSystem == 8 && context->outputNumSystem == 2)
     {
-        context->translatedValue = octalToBinary(newValue);
+        context->translatedValue = octToBin(newValue);
     }
 }
 
 void swap(AppContext* context)
 {
-    char* test = (char*)malloc(strlen(context->translatedValue));
-    strcpy(test, context->translatedValue);
+    const char* test = context->translatedValue;
     context->translatedValue = context->inputValue;
     context->inputValue = test;
-    free(test);
 }
 
-
-char* decimalToBinary(const char* decimalStr)
+char* decToBin(const char* decimalStr)
 {
     long long decimal = stringToInt(decimalStr);
     unsigned int num = decimal;
@@ -111,80 +98,63 @@ char* decimalToBinary(const char* decimalStr)
     return result;
 }
 
-char* decimalToOctal(const char* decimalStr)
+char* decToOct(const char* decimalStr)
 {
-    long long decimal = stringToInt(decimalStr);
+    int decimal = stringToInt(decimalStr);
     unsigned int num = decimal;
-    char octalValue[BIT_LIMIT_OCTAL +1];
+    char octalValue[LEN_LIMIT_OCT +1];
     int index = 0;
-    while (num > 0 && index < BIT_LIMIT_OCTAL)
+    while (num > 0 && index < LEN_LIMIT_OCT)
     {
         octalValue[index++] = (num % 8) + '0';
         num /= 8;
     }
     if (decimal >= 0)
     {
-        while (index < BIT_LIMIT_OCTAL)
+        while (index < LEN_LIMIT_OCT)
         {
             octalValue[index++] = '0';
         }
     }
-    octalValue[BIT_LIMIT_OCTAL] = '\0';
-    char* result = (char*)malloc(BIT_LIMIT_OCTAL + 1);
-    for (int i = 0; i < BIT_LIMIT_OCTAL; ++i)
+    octalValue[LEN_LIMIT_OCT] = '\0';
+    char* result = (char*)malloc(LEN_LIMIT_OCT + 1);
+    for (int i = 0; i < LEN_LIMIT_OCT; ++i)
     {
-        result[i] = octalValue[BIT_LIMIT_OCTAL - 1 - i];
+        result[i] = octalValue[LEN_LIMIT_OCT - 1 - i];
     }
-    result[BIT_LIMIT_OCTAL] = '\0';
+    result[LEN_LIMIT_OCT] = '\0';
     return result;
 }
 
-char* binaryToDecimal(const char* binaryStr)
+char* toDec(const char* inputStr, int inputNumSys)
 {
-    long long decimal = 0;
+    int decimal = 0;
     int base = 1;
-    int length = strlen(binaryStr);
-    for (int i = length - 1; i >= 0; i--)
+    int length = strlen(inputStr);
+
+    for (int i = length - 1; i >= 0; --i)
     {
-        if (binaryStr[i] == '1')
-        {
-            decimal += base;
-        }
-        base *= 2;
+        decimal += (inputStr[i] - '0') * base;
+        base *= inputNumSys;
     }
-    char* result = (char*)malloc(BIT_LIMIT + 1);
-    snprintf(result, BIT_LIMIT + 1, "%lld", decimal);
+    char* result = (char*)malloc(LEN_LIMIT_DEC + 1);
+    snprintf(result, LEN_LIMIT_DEC + 1, "%d", decimal);
+    result[LEN_LIMIT_DEC] = '\0';
     return result;
 }
 
-char* binaryToOctal(const char* binaryStr)
+char* binToOct(const char* binaryStr)
 {
-    char* decimal = binaryToDecimal(binaryStr);
-    char* result = decimalToOctal(decimal);
+    char* decimal = toDec(binaryStr, 2);
+    char* result = decToOct(decimal);
     free(decimal);
     return result;
 }
 
-char* octalToDecimal(const char* octalStr)
+char* octToBin(const char* octalStr)
 {
-    long long decimal = 0;
-    int base = 1;
-    int length = strlen(octalStr);
-
-    for (int i = length - 1; i >= 0; --i)
-    {
-        decimal += (octalStr[i] - '0') * base;
-        base *= 8;
-    }
-    char* result = (char*)malloc(BIT_LIMIT + 1);
-    snprintf(result, BIT_LIMIT + 1, "%lld", decimal);
-    return result;
-}
-
-char* octalToBinary(const char* octalStr)
-{
-    char* decimal = octalToDecimal(octalStr);
-    char* result = decimalToBinary(decimal);
+    char* decimal = toDec(octalStr, 8);
+    char* result = decToBin(decimal);
     free(decimal);
     return result;
 }

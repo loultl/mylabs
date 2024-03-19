@@ -3,6 +3,10 @@
 
 #include "appcontext.h"
 
+int checkDecSize(const char* input);
+int checkDecSize(const char* input);
+int checkDecSize(const char* input);
+
 void setErrorCode(AppContext* context, const char* input);
 void setError(AppContext* context);
 

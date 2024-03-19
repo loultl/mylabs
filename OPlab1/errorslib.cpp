@@ -4,6 +4,31 @@
 #include <cmath>
 #include <cstring>
 
+int checkDecSize(const char* input)
+{
+    int checkState = 0;
+    if (stringToInt(input) > (pow(2, BIT_LIMIT - 1) - 1) || stringToInt(input) < (-pow(2, BIT_LIMIT - 1)))
+    {
+        checkState = 1;
+    }
+    return checkState;
+}
+
+int checkOctSize(const char* input)
+{
+    int checkState = 0;
+    if (!(strlen(input) < LEN_LIMIT_OCT || ((strlen(input) == LEN_LIMIT_OCT) && (input[0] == '0' || input[0] == '1' || input[0] == '2' || input[0] == '3'))))
+    {
+        checkState = 1;
+    }
+    return checkState;
+}
+
+int checkBinSize(const char* input)
+{
+    return strlen(input) > BIT_LIMIT;
+}
+
 void setErrorCode(AppContext* context, const char* input)
 {
     context->errorCode = 0;
@@ -15,7 +40,7 @@ void setErrorCode(AppContext* context, const char* input)
             {
                 context->errorCode = 10;
             }
-            else if (stringToInt(input) > pow(2, BIT_LIMIT) || stringToInt(input) < -pow(2, BIT_LIMIT))
+            else if (checkDecSize(input))
             {
                 context->errorCode = 20;
             }        
@@ -29,7 +54,7 @@ void setErrorCode(AppContext* context, const char* input)
             {
                 context->errorCode = 10;
             }
-            else if (strlen(input) > BIT_LIMIT + 1)
+            else if (checkBinSize(input))
             {
                 context->errorCode = 20;
             }
@@ -43,7 +68,7 @@ void setErrorCode(AppContext* context, const char* input)
             {
                 context->errorCode = 10;
             }
-            else if (strlen(input) > (BIT_LIMIT + 1) / 3 + 1)
+            else if (checkOctSize(input))
             {
                 context->errorCode = 20;
             }
@@ -59,6 +84,7 @@ void setErrorCode(AppContext* context, const char* input)
             context->errorCode = 1;
     }
 }
+
 
 void setError(AppContext* context)
 {

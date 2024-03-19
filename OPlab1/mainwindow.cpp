@@ -14,9 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->outBinSys, &QPushButton::clicked, this, &MainWindow::onOutputBinSystemClicked);
     connect(ui->outOctSys, &QPushButton::clicked, this, &MainWindow::onOutputOctSystemClicked);
     connect(ui->outDecSys, &QPushButton::clicked, this, &MainWindow::onOutputDecSystemClicked);
+    connect(ui->swapButton, &QPushButton::clicked, this, &MainWindow::onSwapClicked);
+    connect(ui->copyButton, &QPushButton::clicked, this, &MainWindow::onCopyClicked);
     connect(ui->translateButton, &QPushButton::clicked, this, &MainWindow::onTranslateClicked);
-
-
     updateLabel();
 }
 
@@ -67,6 +67,19 @@ void MainWindow::onOutputDecSystemClicked() {
     free(param);
 }
 
+void MainWindow::onSwapClicked()
+{
+    doOperation(Swap, &context, nullptr);
+    updateLabel();
+}
+
+void MainWindow::onCopyClicked()
+{
+    QClipboard* clipboard = QGuiApplication::clipboard();
+    QString textToClipboard = ui->translatedValue->text();
+    clipboard->setText(textToClipboard);
+}
+
 void MainWindow::onTranslateClicked()
 {
     std::string str = ui->inputValue->text().toStdString();
@@ -91,13 +104,14 @@ void MainWindow::updateLabel()
 {
     if (context.errorCode != 0)
     {
-        ui->errorLine->setText(QString::fromUtf8(context.errorLine));
+        ui->errorLine->setText(context.errorLine);
         ui->translatedValue->clear();
     }
     else
     {
         ui->errorLine->clear();
-        ui->translatedValue->setText(QString::fromUtf8(context.translatedValue));
+        ui->inputValue->setText(context.inputValue);
+        ui->translatedValue->setText(context.translatedValue);
     }
 }
 

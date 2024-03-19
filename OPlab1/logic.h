@@ -10,12 +10,11 @@
 
 #define DEFAULT_VALUE 0
 #define ERROR_LINE ""
-#define BYTE_LIMIT 4
-#define BIT_LIMIT (BYTE_LIMIT * 8)
-#define BIT_LIMIT_OCTAL (BIT_LIMIT / 3 + 1)
+#define BIT_LIMIT 32
+#define LEN_LIMIT_OCT (BIT_LIMIT / 3 + 1)
+#define LEN_LIMIT_DEC 11
 
-long long stringToInt(const char *str);
-char* intToString(long long value);
+int stringToInt(const char *str);
 void initialize(AppContext* context);
 void inputOfInputNumSystem(AppContext* context, int inputNumSys);
 void inputOfOutputNumSystem(AppContext* context, int ouputNumSys);
@@ -23,12 +22,11 @@ void inputOfValue(AppContext* context, const char* newValue);
 void translate(AppContext* context, const char* newValue);
 void swap(AppContext* context);
 
-char* decimalToBinary(const char* decimalStr);
-char* decimalToOctal(const char* decimalStr);
-char* binaryToDecimal(const char* binaryStr);
-char* binaryToOctal(const char* binaryStr);
-char* octalToDecimal(const char* octalStr);
-char* octalToBinary(const char* octalStr);
+char* decToBin(const char* decimalStr);
+char* decToOct(const char* decimalStr);
+char* toDec(const char* inputStr, int inputNumSys);
+char* binToOct(const char* binaryStr);
+char* octToBin(const char* octalStr);
 
 
 #endif // LOGIC_H

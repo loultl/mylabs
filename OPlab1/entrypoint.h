@@ -2,7 +2,6 @@
 #define ENTRYPOINT_H
 
 #include "appcontext.h"
-#include "logic.h"
 
 enum Operation
 {

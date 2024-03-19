@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "appcontext.h"
-#include "entrypoint.h"
+#include <QClipboard>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -27,6 +27,8 @@ private slots:
     void onOutputBinSystemClicked();
     void onOutputOctSystemClicked();
     void onOutputDecSystemClicked();
+    void onSwapClicked();
+    void onCopyClicked();
     void onTranslateClicked();
     void updateLabel();
 
