@@ -1,5 +1,4 @@
 #include "entrypoint.h"
-#include "errorslib.h"
 #include "logic.h"
 
 void doOperation(Operation operation, AppContext* context, AppParams* params) {
@@ -18,9 +17,6 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
         break;
     case Validation:
         setErrorCode(context, params->newValue);
-        break;
-    case FillErrorLine:
-        setError(context);
         break;
     case Translate:
         translate(context, params->newValue);

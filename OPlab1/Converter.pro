@@ -11,7 +11,6 @@ QMAKE_CXXFLAGS += -std=c++20
 
 SOURCES += \
     entrypoint.cpp \
-    errorslib.cpp \
     logic.cpp \
     main.cpp \
     mainwindow.cpp
@@ -19,7 +18,6 @@ SOURCES += \
 HEADERS += \
     appcontext.h \
     entrypoint.h \
-    errorslib.h \
     logic.h \
     mainwindow.h
 

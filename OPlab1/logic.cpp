@@ -1,4 +1,5 @@
 #include "logic.h"
+#include "entrypoint.h"
 
 int stringToInt(const char *str)
 {
@@ -39,11 +40,11 @@ void translate(AppContext* context, const char* newValue)
     }
     else if (context->inputNumSystem == 10 && context->outputNumSystem == 2)
     {
-        context->translatedValue = decToBin(newValue);
+        context->translatedValue = decToSomething(newValue, LEN_LIMIT_BIN, context->outputNumSystem);
     }
     else if (context->inputNumSystem == 10 && context->outputNumSystem == 8)
     {
-        context->translatedValue = decToOct(newValue);
+        context->translatedValue = decToSomething(newValue, LEN_LIMIT_OCT, context->outputNumSystem);
     }
     else if (context->inputNumSystem == 2 && context->outputNumSystem == 10)
     {
@@ -70,59 +71,24 @@ void swap(AppContext* context)
     context->inputValue = test;
 }
 
-char* decToBin(const char* decimalStr)
-{
-    long long decimal = stringToInt(decimalStr);
-    unsigned int num = decimal;
-    char binaryValue[BIT_LIMIT + 1];
-    int index = 0;
-    while (num > 0 && index < BIT_LIMIT)
-    {
-        binaryValue[index++] = (num % 2) + '0';
-        num /= 2;
-    }
-    if (decimal >= 0)
-    {
-        while (index < BIT_LIMIT)
-        {
-            binaryValue[index++] = '0';
-        }
-    }
-    binaryValue[BIT_LIMIT] = '\0';
-    char* result = (char*)malloc(BIT_LIMIT + 1);
-    for (int i = 0; i < BIT_LIMIT; ++i)
-    {
-        result[i] = binaryValue[BIT_LIMIT - 1 - i];
-    }
-    result[BIT_LIMIT] = '\0';
-    return result;
-}
-
-char* decToOct(const char* decimalStr)
+char* decToSomething(const char* decimalStr, int lenghtLimit, int base)
 {
     int decimal = stringToInt(decimalStr);
     unsigned int num = decimal;
-    char octalValue[LEN_LIMIT_OCT +1];
+    char newValue[lenghtLimit + 1];
     int index = 0;
-    while (num > 0 && index < LEN_LIMIT_OCT)
+    while (num > 0 && index < lenghtLimit)
     {
-        octalValue[index++] = (num % 8) + '0';
-        num /= 8;
+        newValue[index++] = (num % base) + '0';
+        num /= base;
     }
-    if (decimal >= 0)
+    newValue[index] = '\0';
+    char* result = (char*)malloc(index + 1);
+    for (int i = 0; i < index; ++i)
     {
-        while (index < LEN_LIMIT_OCT)
-        {
-            octalValue[index++] = '0';
-        }
+        result[i] = newValue[index - 1 - i];
     }
-    octalValue[LEN_LIMIT_OCT] = '\0';
-    char* result = (char*)malloc(LEN_LIMIT_OCT + 1);
-    for (int i = 0; i < LEN_LIMIT_OCT; ++i)
-    {
-        result[i] = octalValue[LEN_LIMIT_OCT - 1 - i];
-    }
-    result[LEN_LIMIT_OCT] = '\0';
+    result[index] = '\0';
     return result;
 }
 
@@ -146,7 +112,7 @@ char* toDec(const char* inputStr, int inputNumSys)
 char* binToOct(const char* binaryStr)
 {
     char* decimal = toDec(binaryStr, 2);
-    char* result = decToOct(decimal);
+    char* result = decToSomething(decimal, LEN_LIMIT_OCT, 8);
     free(decimal);
     return result;
 }
@@ -154,7 +120,96 @@ char* binToOct(const char* binaryStr)
 char* octToBin(const char* octalStr)
 {
     char* decimal = toDec(octalStr, 8);
-    char* result = decToBin(decimal);
+    char* result = decToSomething(decimal, LEN_LIMIT_BIN, 2);
     free(decimal);
     return result;
 }
+
+int checkDecSize(const char* input)
+{
+    int checkState = 0;
+    if (stringToInt(input) > (pow(2, BIT_LIMIT - 1) - 1) || stringToInt(input) < (-pow(2, BIT_LIMIT - 1)))
+    {
+        checkState = 1;
+    }
+    return checkState;
+}
+
+int checkOctSize(const char* input)
+{
+    int checkState = 0;
+    if (!(strlen(input) < LEN_LIMIT_OCT || ((strlen(input) == LEN_LIMIT_OCT) && (input[0] >= 0 && input[0] <= '3'))))
+    {
+        checkState = 1;
+    }
+    return checkState;
+}
+
+int checkBinSize(const char* input)
+{
+    return strlen(input) > BIT_LIMIT;
+}
+
+void setErrorCode(AppContext* context, const char* input)
+{
+    context->errorCode = NoErrors;
+    if (context->inputNumSystem == 10)
+    {
+        for (int i = 0; input[i] != '\0'; ++i)
+        {
+            if ((i == 0 && !(input[i] == '-' || isdigit(input[i]))) || (i > 0 && !isdigit(input[i])))
+            {
+                context->errorCode = IncorrectCombibationOfSymbols;
+                break;
+
+            }
+            else if (checkDecSize(input))
+            {
+                context->errorCode = ExitFromInt;
+                break;
+            }
+        }
+    }
+    else if (context->inputNumSystem == 2)
+    {
+        for (int i = 0; input[i] != '\0'; ++i)
+        {
+            if (input[i] != '0' && input[i] != '1')
+            {
+                context->errorCode = IncorrectCombibationOfSymbols;
+                break;
+            }
+            else if (checkBinSize(input))
+            {
+                context->errorCode = ExitFromInt;
+                break;
+            }
+        }
+    }
+    else if (context->inputNumSystem == 8)
+    {
+        for (int i = 0; input[i] != '\0'; ++i)
+        {
+            if (input[i] < '0' || input[i] > '7')
+            {
+                context->errorCode = IncorrectCombibationOfSymbols;
+                break;
+            }
+            else if (checkOctSize(input))
+            {
+                context->errorCode = ExitFromInt;
+                break;
+            }
+        }
+    }
+    if (context->errorCode == NoErrors)
+    {
+        if (context->inputNumSystem == 0 && context->outputNumSystem == 0)
+            context->errorCode = NotCheckedNumSystems;
+        if (context->inputNumSystem != 0 && context->outputNumSystem == 0)
+            context->errorCode = NotCheckedInputNumSystem;
+        if (context->inputNumSystem == 0 && context->outputNumSystem != 0)
+            context->errorCode = NotCheckedOutputNumSystem;
+    }
+}
+

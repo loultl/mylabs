@@ -88,9 +88,9 @@ void MainWindow::onTranslateClicked()
     param->newValue = cStr;
     doOperation(InputOfValue, &context, param);
     doOperation(Validation, &context, param);
-    if (context.errorCode != 0)
+    if (context.errorCode != NoErrors)
     {
-        doOperation(FillErrorLine, &context, param);
+        errorHandler();
     }
     else
     {
@@ -102,9 +102,8 @@ void MainWindow::onTranslateClicked()
 
 void MainWindow::updateLabel()
 {
-    if (context.errorCode != 0)
+    if (context.errorCode != NoErrors)
     {
-        ui->errorLine->setText(context.errorLine);
         ui->translatedValue->clear();
     }
     else
@@ -114,5 +113,28 @@ void MainWindow::updateLabel()
         ui->translatedValue->setText(context.translatedValue);
     }
 }
+
+void MainWindow::errorHandler()
+{
+    switch(context.errorCode)
+    {
+    case(NotCheckedInputNumSystem):
+        ui->errorLine->setText(NOT_CHECKED_INPUT_NUM_SYS);
+        break;
+    case(NotCheckedOutputNumSystem):
+        ui->errorLine->setText(NOT_CHECKED_OUTPUT_NUM_SYS);
+        break;
+    case(NotCheckedNumSystems):
+        ui->errorLine->setText(NOT_CHECKED_NUM_SYSTEMS);
+        break;
+    case(IncorrectCombibationOfSymbols):
+        ui->errorLine->setText(INCORRECT_COMBINATION_OF_SYMBOLS);
+        break;
+    case(ExitFromInt):
+        ui->errorLine->setText(EXIT_FROM_INT);
+        break;
+    }
+}
+
 
 

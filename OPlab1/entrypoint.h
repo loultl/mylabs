@@ -10,9 +10,18 @@ enum Operation
     InputOfOutputNumSystem,
     InputOfValue,
     Validation,
-    FillErrorLine,
     Translate,
     Swap
+};
+
+enum Errors
+{
+    ExitFromInt,
+    IncorrectCombibationOfSymbols,
+    NotCheckedInputNumSystem,
+    NotCheckedOutputNumSystem,
+    NotCheckedNumSystems,
+    NoErrors
 };
 
 struct AppParams {

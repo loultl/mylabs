@@ -5,6 +5,13 @@
 #include "appcontext.h"
 #include <QClipboard>
 
+#define NO_ERRORS ""
+#define NOT_CHECKED_INPUT_NUM_SYS "Не выбрана входная система счисления"
+#define NOT_CHECKED_OUTPUT_NUM_SYS "Не выбрана выходная система счисления"
+#define NOT_CHECKED_NUM_SYSTEMS "Не выбраны системы счисления"
+#define INCORRECT_COMBINATION_OF_SYMBOLS "Введена недопустимая комбинация символов для выбранной системы счисления"
+#define EXIT_FROM_INT "Выход за пределы значений 4-х байтового знакового целого числа"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -31,6 +38,7 @@ private slots:
     void onCopyClicked();
     void onTranslateClicked();
     void updateLabel();
+    void errorHandler();
 
 private:
     Ui::MainWindow *ui;
