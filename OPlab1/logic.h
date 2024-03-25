@@ -11,26 +11,22 @@
 #define DEFAULT_VALUE 0
 #define ERROR_LINE ""
 #define BIT_LIMIT 32
-#define LEN_LIMIT_BIN 32
-#define LEN_LIMIT_OCT (BIT_LIMIT / 3 + 1)
-#define LEN_LIMIT_DEC 11
+#define LEN_LIMIT_OCT (BIT_LIMIT / 3) + 1
+#define LEN_LIMIT_DEC (BIT_LIMIT / 3) + 1
 
-int stringToInt(const char *str);
+long long stringToInt(const char *str);
 void initialize(AppContext* context);
-void inputOfInputNumSystem(AppContext* context, int inputNumSys);
-void inputOfOutputNumSystem(AppContext* context, int ouputNumSys);
+void inputOfInputNumSystem(AppContext* context, int inputNumSys, int whichRadioButtonChecked);
+void inputOfOutputNumSystem(AppContext* context, int outputNumSys, int whichRadioButtonChecked);
 void inputOfValue(AppContext* context, const char* newValue);
 void translate(AppContext* context, const char* newValue);
 void swap(AppContext* context);
 
-char* decToSomething(const char* decimalStr, int lenghtLimit, int base);
+char* decToSomething(const char* decimalStr, int base);
 char* toDec(const char* inputStr, int inputNumSys);
-char* binToOct(const char* binaryStr);
-char* octToBin(const char* octalStr);
 
 int checkDecSize(const char* input);
-int checkDecSize(const char* input);
-int checkDecSize(const char* input);
+int checkSize(AppContext* context, const char* input);
 
 void setErrorCode(AppContext* context, const char* input);
 

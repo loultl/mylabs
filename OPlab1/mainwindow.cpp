@@ -28,6 +28,7 @@ MainWindow::~MainWindow()
 void MainWindow::onInputBinSystemClicked() {
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     param->inputNumSystem = 2;
+    param->whichInputRadioButton = CheckedInputBinRadioButton;
     doOperation(InputOfInputNumSystem, &context, param);
     free(param);
 }
@@ -35,6 +36,7 @@ void MainWindow::onInputBinSystemClicked() {
 void MainWindow::onInputOctSystemClicked() {
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     param->inputNumSystem = 8;
+    param->whichInputRadioButton = CheckedInputOctRadioButton;
     doOperation(InputOfInputNumSystem, &context, param);
     free(param);
 }
@@ -42,6 +44,7 @@ void MainWindow::onInputOctSystemClicked() {
 void MainWindow::onInputDecSystemClicked() {
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     param->inputNumSystem = 10;
+    param->whichInputRadioButton = CheckedInputDecRadioButton;
     doOperation(InputOfInputNumSystem, &context, param);
     free(param);
 }
@@ -49,6 +52,7 @@ void MainWindow::onInputDecSystemClicked() {
 void MainWindow::onOutputBinSystemClicked() {
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     param->outputNumSystem = 2;
+    param->whichOutputRadioButton = CheckedOutputBinRadioButton;
     doOperation(InputOfOutputNumSystem, &context, param);
     free(param);
 }
@@ -56,6 +60,7 @@ void MainWindow::onOutputBinSystemClicked() {
 void MainWindow::onOutputOctSystemClicked() {
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     param->outputNumSystem = 8;
+    param->whichOutputRadioButton = CheckedOutputOctRadioButton;
     doOperation(InputOfOutputNumSystem, &context, param);
     free(param);
 }
@@ -63,14 +68,33 @@ void MainWindow::onOutputOctSystemClicked() {
 void MainWindow::onOutputDecSystemClicked() {
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     param->outputNumSystem = 10;
+    param->whichOutputRadioButton = CheckedOutputDecRadioButton;
     doOperation(InputOfOutputNumSystem, &context, param);
     free(param);
 }
 
 void MainWindow::onSwapClicked()
 {
-    doOperation(Swap, &context, nullptr);
+    std::string str = ui->inputValue->text().toStdString();
+    const char* cStr = str.c_str();
+    AppParams* param = (AppParams*)malloc(sizeof(AppParams));
+    param->newValue = cStr;
+    doOperation(InputOfValue, &context, param);
+    doOperation(Validation, &context, param);
+    if (context.errorCode != NoErrors)
+    {
+        errorHandler();
+    }
+    else
+    {
+        doOperation(Translate, &context, param);
+        doOperation(Swap, &context, nullptr);
+        doOperation(TranslateForSwap, &context, param);
+        inputRadioButtonHandler();
+        outputRadioButtonHandler();
+    }
     updateLabel();
+    free(param);
 }
 
 void MainWindow::onCopyClicked()
@@ -132,6 +156,38 @@ void MainWindow::errorHandler()
         break;
     case(ExitFromInt):
         ui->errorLine->setText(EXIT_FROM_INT);
+        break;
+    }
+}
+
+void MainWindow::inputRadioButtonHandler()
+{
+    switch(context.whichInputRadioButton)
+    {
+    case(CheckedInputBinRadioButton):
+        ui->inBinSys->setChecked(true);
+        break;
+    case(CheckedInputOctRadioButton):
+        ui->inOctSys->setChecked(true);
+        break;
+    case(CheckedInputDecRadioButton):
+        ui->inDecSys->setChecked(true);
+        break;
+    }
+}
+
+void MainWindow::outputRadioButtonHandler()
+{
+    switch(context.whichOutputRadioButton)
+    {
+    case(CheckedOutputBinRadioButton):
+        ui->outBinSys->setChecked(true);
+        break;
+    case(CheckedOutputOctRadioButton):
+        ui->outOctSys->setChecked(true);
+        break;
+    case(CheckedOutputDecRadioButton):
+        ui->outDecSys->setChecked(true);
         break;
     }
 }

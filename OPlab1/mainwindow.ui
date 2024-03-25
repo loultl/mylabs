@@ -33,38 +33,52 @@
        <enum>QLayout::SetMaximumSize</enum>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="inputNumSys">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetMaximumSize</enum>
+       <widget class="QGroupBox" name="whaat">
+        <property name="checkable">
+         <bool>false</bool>
         </property>
-        <item>
-         <widget class="QRadioButton" name="inBinSys">
-          <property name="text">
-           <string>2</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="inDecSys">
-          <property name="text">
-           <string>10</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="inOctSys">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>8</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+        <layout class="QVBoxLayout" name="inputNumSys">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMaximumSize</enum>
+         </property>
+         <item>
+          <widget class="QRadioButton" name="inBinSys">
+           <property name="text">
+            <string>2</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="inOctSys">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>8</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="inDecSys">
+           <property name="text">
+            <string>10</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item>
        <spacer name="horizontalSpacer">
@@ -160,10 +174,10 @@
       <item>
        <widget class="QPushButton" name="swapButton">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
-         <string>&lt;-&gt;(не работает)</string>
+         <string>&lt;-&gt;(не работает???)</string>
         </property>
        </widget>
       </item>
@@ -191,32 +205,43 @@
        <enum>QLayout::SetMaximumSize</enum>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="outputNumSys">
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QRadioButton" name="outBinSys">
-          <property name="text">
-           <string>2</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="outOctSys">
-          <property name="text">
-           <string>8</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="outDecSys">
-          <property name="text">
-           <string>10</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QGroupBox" name="whaat_2">
+        <layout class="QVBoxLayout" name="outputNumSys">
+         <property name="rightMargin">
+          <number>1</number>
+         </property>
+         <item>
+          <widget class="QRadioButton" name="outBinSys">
+           <property name="text">
+            <string>2</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="outOctSys">
+           <property name="text">
+            <string>8</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="outDecSys">
+           <property name="text">
+            <string>10</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item>
        <spacer name="horizontalSpacer_3">

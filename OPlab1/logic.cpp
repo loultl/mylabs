@@ -1,9 +1,9 @@
 #include "logic.h"
 #include "entrypoint.h"
 
-int stringToInt(const char *str)
+long long stringToInt(const char *str)
 {
-    return atoi(str);
+    return atoll(str);
 }
 
 void initialize(AppContext* context)
@@ -15,14 +15,16 @@ void initialize(AppContext* context)
     strcpy(context->errorLine, ERROR_LINE);
 }
 
-void inputOfInputNumSystem(AppContext* context, int inputNumSys)
+void inputOfInputNumSystem(AppContext* context, int inputNumSys, int whichRadioButtonChecked)
 {
     context->inputNumSystem = inputNumSys;
+    context->whichInputRadioButton = whichRadioButtonChecked;
 }
 
-void inputOfOutputNumSystem(AppContext* context, int outputNumSys)
+void inputOfOutputNumSystem(AppContext* context, int outputNumSys, int whichRadioButtonChecked)
 {
     context->outputNumSystem = outputNumSys;
+    context->whichOutputRadioButton = whichRadioButtonChecked;
 }
 
 void inputOfValue(AppContext* context, const char* newValue)
@@ -32,52 +34,42 @@ void inputOfValue(AppContext* context, const char* newValue)
 
 void translate(AppContext* context, const char* newValue)
 {
-    context->errorLine[0] = '\0';
-
     if (context->inputNumSystem == context->outputNumSystem)
     {
         context->translatedValue = newValue;
     }
-    else if (context->inputNumSystem == 10 && context->outputNumSystem == 2)
+    else if (context->inputNumSystem == 10)
     {
-        context->translatedValue = decToSomething(newValue, LEN_LIMIT_BIN, context->outputNumSystem);
+        context->translatedValue = decToSomething(newValue, context->outputNumSystem);
     }
-    else if (context->inputNumSystem == 10 && context->outputNumSystem == 8)
-    {
-        context->translatedValue = decToSomething(newValue, LEN_LIMIT_OCT, context->outputNumSystem);
-    }
-    else if (context->inputNumSystem == 2 && context->outputNumSystem == 10)
+    else if (context->outputNumSystem == 10)
     {
         context->translatedValue = toDec(newValue, context->inputNumSystem);
     }
-    else if (context->inputNumSystem == 2 && context->outputNumSystem == 8)
+    else
     {
-        context->translatedValue = binToOct(newValue);
-    }
-    else if (context->inputNumSystem == 8 && context->outputNumSystem == 10)
-    {
-        context->translatedValue = toDec(newValue, context->inputNumSystem);
-    }
-    else if (context->inputNumSystem == 8 && context->outputNumSystem == 2)
-    {
-        context->translatedValue = octToBin(newValue);
+        context->translatedValue = decToSomething(toDec(newValue, context->inputNumSystem), context->outputNumSystem);
     }
 }
 
 void swap(AppContext* context)
 {
-    const char* test = context->translatedValue;
-    context->translatedValue = context->inputValue;
-    context->inputValue = test;
+    int newNumSys = context->inputNumSystem;
+    context->inputNumSystem = context->outputNumSystem;
+    context->outputNumSystem = newNumSys;
+    int newCheckedRadioButton = context->whichInputRadioButton;
+    context->whichInputRadioButton = context->whichOutputRadioButton;
+    context->whichOutputRadioButton = newCheckedRadioButton;
+    context->inputValue = context->translatedValue;
 }
 
-char* decToSomething(const char* decimalStr, int lenghtLimit, int base)
+char* decToSomething(const char* decimalStr, int base)
 {
     int decimal = stringToInt(decimalStr);
     unsigned int num = decimal;
-    char newValue[lenghtLimit + 1];
+    char newValue[BIT_LIMIT + 1];
     int index = 0;
-    while (num > 0 && index < lenghtLimit)
+    while (num > 0 && index < BIT_LIMIT)
     {
         newValue[index++] = (num % base) + '0';
         num /= base;
@@ -97,7 +89,6 @@ char* toDec(const char* inputStr, int inputNumSys)
     int decimal = 0;
     int base = 1;
     int length = strlen(inputStr);
-
     for (int i = length - 1; i >= 0; --i)
     {
         decimal += (inputStr[i] - '0') * base;
@@ -106,22 +97,6 @@ char* toDec(const char* inputStr, int inputNumSys)
     char* result = (char*)malloc(LEN_LIMIT_DEC + 1);
     snprintf(result, LEN_LIMIT_DEC + 1, "%d", decimal);
     result[LEN_LIMIT_DEC] = '\0';
-    return result;
-}
-
-char* binToOct(const char* binaryStr)
-{
-    char* decimal = toDec(binaryStr, 2);
-    char* result = decToSomething(decimal, LEN_LIMIT_OCT, 8);
-    free(decimal);
-    return result;
-}
-
-char* octToBin(const char* octalStr)
-{
-    char* decimal = toDec(octalStr, 8);
-    char* result = decToSomething(decimal, LEN_LIMIT_BIN, 2);
-    free(decimal);
     return result;
 }
 
@@ -207,9 +182,9 @@ void setErrorCode(AppContext* context, const char* input)
         if (context->inputNumSystem == 0 && context->outputNumSystem == 0)
             context->errorCode = NotCheckedNumSystems;
         if (context->inputNumSystem != 0 && context->outputNumSystem == 0)
-            context->errorCode = NotCheckedInputNumSystem;
-        if (context->inputNumSystem == 0 && context->outputNumSystem != 0)
             context->errorCode = NotCheckedOutputNumSystem;
+        if (context->inputNumSystem == 0 && context->outputNumSystem != 0)
+            context->errorCode = NotCheckedInputNumSystem;
     }
 }
 

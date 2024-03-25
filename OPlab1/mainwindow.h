@@ -39,6 +39,8 @@ private slots:
     void onTranslateClicked();
     void updateLabel();
     void errorHandler();
+    void inputRadioButtonHandler();
+    void outputRadioButtonHandler();
 
 private:
     Ui::MainWindow *ui;

@@ -7,10 +7,10 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
         initialize(context);
         break;
     case InputOfInputNumSystem:
-        inputOfInputNumSystem(context, params->inputNumSystem);
+        inputOfInputNumSystem(context, params->inputNumSystem, params->whichInputRadioButton);
         break;
     case InputOfOutputNumSystem:
-        inputOfOutputNumSystem(context, params->outputNumSystem);
+        inputOfOutputNumSystem(context, params->outputNumSystem, params->whichOutputRadioButton);
         break;
     case InputOfValue:
         inputOfValue(context, params->newValue);
@@ -20,6 +20,9 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
         break;
     case Translate:
         translate(context, params->newValue);
+        break;
+    case TranslateForSwap:
+        translate(context, context->inputValue);
         break;
     case Swap:
         swap(context);
