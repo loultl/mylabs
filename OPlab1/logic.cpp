@@ -60,7 +60,9 @@ void swap(AppContext* context)
     int newCheckedRadioButton = context->whichInputRadioButton;
     context->whichInputRadioButton = context->whichOutputRadioButton;
     context->whichOutputRadioButton = newCheckedRadioButton;
+    const char* newTranslatedValue = context->inputValue;
     context->inputValue = context->translatedValue;
+    context->translatedValue = newTranslatedValue;
 }
 
 char* decToSomething(const char* decimalStr, int base)

@@ -11,7 +11,6 @@ enum Operation
     InputOfValue,
     Validation,
     Translate,
-    TranslateForSwap,
     Swap
 };
 

@@ -89,7 +89,6 @@ void MainWindow::onSwapClicked()
     {
         doOperation(Translate, &context, param);
         doOperation(Swap, &context, nullptr);
-        doOperation(TranslateForSwap, &context, param);
         inputRadioButtonHandler();
         outputRadioButtonHandler();
     }
@@ -119,6 +118,8 @@ void MainWindow::onTranslateClicked()
     else
     {
         doOperation(Translate, &context, param);
+        inputRadioButtonHandler();
+        outputRadioButtonHandler();
     }
     updateLabel();
     free(param);
