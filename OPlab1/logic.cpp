@@ -1,30 +1,38 @@
 #include "logic.h"
-#include "entrypoint.h"
 
 long long stringToInt(const char *str)
 {
     return atoll(str);
 }
 
+char* toLower(const char* str)
+{
+    char* result = (char*)malloc(strlen(str) + 1);
+    result[strlen(str)] = '\0';
+    for(int i = 0; str[i]; i++)
+    {
+        result[i] = tolower(str[i]);
+    }
+    return result;
+}
+
 void initialize(AppContext* context)
 {
-    context->translatedValue = DEFAULT_VALUE;
+    context->translatedValue = EMPTY_LINE;
+    context->inputValue = EMPTY_LINE;
     context->inputNumSystem = 0;
     context->outputNumSystem = 0;
-    context->errorCode = DEFAULT_VALUE;
-    strcpy(context->errorLine, ERROR_LINE);
+    context->errorCode = NoErrors;
 }
 
-void inputOfInputNumSystem(AppContext* context, int inputNumSys, int whichRadioButtonChecked)
+void inputOfInputNumSystem(AppContext* context, int inputNumSys)
 {
     context->inputNumSystem = inputNumSys;
-    context->whichInputRadioButton = whichRadioButtonChecked;
 }
 
-void inputOfOutputNumSystem(AppContext* context, int outputNumSys, int whichRadioButtonChecked)
+void inputOfOutputNumSystem(AppContext* context, int outputNumSys)
 {
     context->outputNumSystem = outputNumSys;
-    context->whichOutputRadioButton = whichRadioButtonChecked;
 }
 
 void inputOfValue(AppContext* context, const char* newValue)
@@ -36,7 +44,7 @@ void translate(AppContext* context, const char* newValue)
 {
     if (context->inputNumSystem == context->outputNumSystem)
     {
-        context->translatedValue = newValue;
+        context->translatedValue = toLower(newValue);
     }
     else if (context->inputNumSystem == 10)
     {
@@ -52,17 +60,16 @@ void translate(AppContext* context, const char* newValue)
     }
 }
 
-void swap(AppContext* context)
+int findIndexInAlphabet(char input, const char* alphabet)
 {
-    int newNumSys = context->inputNumSystem;
-    context->inputNumSystem = context->outputNumSystem;
-    context->outputNumSystem = newNumSys;
-    int newCheckedRadioButton = context->whichInputRadioButton;
-    context->whichInputRadioButton = context->whichOutputRadioButton;
-    context->whichOutputRadioButton = newCheckedRadioButton;
-    const char* newTranslatedValue = context->inputValue;
-    context->inputValue = context->translatedValue;
-    context->translatedValue = newTranslatedValue;
+    for (unsigned i = 0;i < strlen(alphabet);i++)
+    {
+        if (input == alphabet[i])
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 
 char* decToSomething(const char* decimalStr, int base)
@@ -71,9 +78,10 @@ char* decToSomething(const char* decimalStr, int base)
     unsigned int num = decimal;
     char newValue[BIT_LIMIT + 1];
     int index = 0;
+    char alphabet[] = "0123456789abcdef";
     while (num > 0 && index < BIT_LIMIT)
     {
-        newValue[index++] = (num % base) + '0';
+        newValue[index++] = alphabet[num % base];
         num /= base;
     }
     newValue[index] = '\0';
@@ -88,14 +96,17 @@ char* decToSomething(const char* decimalStr, int base)
 
 char* toDec(const char* inputStr, int inputNumSys)
 {
+    char alphabet[] = "0123456789abcdef";
+    char* lowInputStr = toLower(inputStr);
     int decimal = 0;
     int base = 1;
     int length = strlen(inputStr);
     for (int i = length - 1; i >= 0; --i)
     {
-        decimal += (inputStr[i] - '0') * base;
+        decimal += findIndexInAlphabet(lowInputStr[i], alphabet) * base;
         base *= inputNumSys;
     }
+    free(lowInputStr);
     char* result = (char*)malloc(LEN_LIMIT_DEC + 1);
     snprintf(result, LEN_LIMIT_DEC + 1, "%d", decimal);
     result[LEN_LIMIT_DEC] = '\0';
@@ -112,73 +123,87 @@ int checkDecSize(const char* input)
     return checkState;
 }
 
-int checkOctSize(const char* input)
-{
-    int checkState = 0;
-    if (!(strlen(input) < LEN_LIMIT_OCT || ((strlen(input) == LEN_LIMIT_OCT) && (input[0] >= 0 && input[0] <= '3'))))
-    {
-        checkState = 1;
-    }
-    return checkState;
-}
-
 int checkBinSize(const char* input)
 {
     return strlen(input) > BIT_LIMIT;
 }
 
-void setErrorCode(AppContext* context, const char* input)
+int checkOtherSize(int inputNumSystem, const char* input)
+{
+    int checkState = 0;
+    char* newInput = decToSomething(toDec(input, inputNumSystem), inputNumSystem);
+    if (strcmp(input, newInput) != 0)
+    {
+        checkState = 1;
+    }
+    free(newInput);
+    return checkState;
+}
+
+int checkForSize(int inputNumSystem, const char* input)
+{
+    int sizeCheckState = 0;
+    switch(inputNumSystem)
+    {
+    case 2:
+        if (checkBinSize(input))
+            sizeCheckState = 1;
+        break;
+    case 10:
+        if (checkDecSize(input))
+            sizeCheckState = 1;
+        break;
+    default:
+        if (checkOtherSize(inputNumSystem, input))
+            sizeCheckState = 1;
+        break;
+    }
+    return sizeCheckState;
+}
+
+int checkSymbol(int inputNumSystem, char sym)
+{
+    int symbolCheckState = 0;
+    char alphabet[] = "0123456789abcdef";
+    if (!(findIndexInAlphabet(sym, alphabet) >= 0 && findIndexInAlphabet(sym, alphabet) < inputNumSystem))
+    {
+        symbolCheckState = 1;
+    }
+    return symbolCheckState;
+}
+
+int checkForSymbols(int inputNumSystem, const char* input)
+{
+    int symbolsCheckState = 0;
+    for (int i = 0; input[i] != '\0'; ++i)
+    {
+        if (input[i] == '-' && i == 0 && inputNumSystem == 10)
+        {
+            symbolsCheckState = 0;
+        }
+        else if (checkSymbol(inputNumSystem, input[i]))
+        {
+            symbolsCheckState = 1;
+        }
+    }
+    return symbolsCheckState;
+}
+
+void validate(AppContext* context, const char* input, int swapStatus)
 {
     context->errorCode = NoErrors;
-    if (context->inputNumSystem == 10)
-    {
-        for (int i = 0; input[i] != '\0'; ++i)
-        {
-            if ((i == 0 && !(input[i] == '-' || isdigit(input[i]))) || (i > 0 && !isdigit(input[i])))
-            {
-                context->errorCode = IncorrectCombibationOfSymbols;
-                break;
+    char* lowInputStr = toLower(input);
 
-            }
-            else if (checkDecSize(input))
-            {
-                context->errorCode = ExitFromInt;
-                break;
-            }
-        }
-    }
-    else if (context->inputNumSystem == 2)
+    if (checkForSymbols(context->inputNumSystem, lowInputStr))
     {
-        for (int i = 0; input[i] != '\0'; ++i)
-        {
-            if (input[i] != '0' && input[i] != '1')
-            {
-                context->errorCode = IncorrectCombibationOfSymbols;
-                break;
-            }
-            else if (checkBinSize(input))
-            {
-                context->errorCode = ExitFromInt;
-                break;
-            }
-        }
+        context->errorCode = IncorrectCombibationOfSymbols;
     }
-    else if (context->inputNumSystem == 8)
+    else if (checkForSize(context->inputNumSystem, lowInputStr))
     {
-        for (int i = 0; input[i] != '\0'; ++i)
-        {
-            if (input[i] < '0' || input[i] > '7')
-            {
-                context->errorCode = IncorrectCombibationOfSymbols;
-                break;
-            }
-            else if (checkOctSize(input))
-            {
-                context->errorCode = ExitFromInt;
-                break;
-            }
-        }
+        context->errorCode = ExitFromInt;
     }
+    free(lowInputStr);
+
     if (context->errorCode == NoErrors)
     {
         if (context->inputNumSystem == 0 && context->outputNumSystem == 0)
@@ -188,5 +213,24 @@ void setErrorCode(AppContext* context, const char* input)
         if (context->inputNumSystem == 0 && context->outputNumSystem != 0)
             context->errorCode = NotCheckedInputNumSystem;
     }
+
+    if (swapStatus && context->errorCode == NoErrors)
+    {
+        char* newOutput = decToSomething(toDec(input, context->inputNumSystem), context->outputNumSystem);
+        if (strcmp(context->translatedValue, newOutput) != 0)
+        {
+            context->errorCode = NoInputOrOutput;
+        }
+        free(newOutput);
+    }
 }
 
+void swap(AppContext* context, const char* inputValue, int inNumberSystem, int outNumberSystem) {
+    validate(context ,inputValue, 1);
+    if (context->errorCode == NoErrors) {
+        context->inputValue = context->translatedValue;
+        context->inputNumSystem = outNumberSystem;
+        context->outputNumSystem = inNumberSystem;
+        translate(context, context->inputValue);
+    }
+}

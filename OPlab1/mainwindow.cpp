@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "entrypoint.h"
+#include "logic.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,12 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     doOperation(Initialization, &context, nullptr);
-    connect(ui->inBinSys, &QPushButton::clicked, this, &MainWindow::onInputBinSystemClicked);
-    connect(ui->inOctSys, &QPushButton::clicked, this, &MainWindow::onInputOctSystemClicked);
-    connect(ui->inDecSys, &QPushButton::clicked, this, &MainWindow::onInputDecSystemClicked);
-    connect(ui->outBinSys, &QPushButton::clicked, this, &MainWindow::onOutputBinSystemClicked);
-    connect(ui->outOctSys, &QPushButton::clicked, this, &MainWindow::onOutputOctSystemClicked);
-    connect(ui->outDecSys, &QPushButton::clicked, this, &MainWindow::onOutputDecSystemClicked);
     connect(ui->swapButton, &QPushButton::clicked, this, &MainWindow::onSwapClicked);
     connect(ui->copyButton, &QPushButton::clicked, this, &MainWindow::onCopyClicked);
     connect(ui->translateButton, &QPushButton::clicked, this, &MainWindow::onTranslateClicked);
@@ -25,72 +20,97 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onInputBinSystemClicked() {
+void MainWindow::inputOfInputNumSys()
+{
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
-    param->inputNumSystem = 2;
-    param->whichInputRadioButton = CheckedInputBinRadioButton;
+    if (ui->inBinSys->isChecked())
+        param->inputNumSystem = 2;
+    else if (ui->in3Sys->isChecked())
+        param->inputNumSystem = 3;
+    else if (ui->in4Sys->isChecked())
+        param->inputNumSystem = 4;
+    else if (ui->in5Sys->isChecked())
+        param->inputNumSystem = 5;
+    else if (ui->in6Sys->isChecked())
+        param->inputNumSystem = 6;
+    else if (ui->in7Sys->isChecked())
+        param->inputNumSystem = 7;
+    else if (ui->inOctSys->isChecked())
+        param->inputNumSystem = 8;
+    else if (ui->in9Sys->isChecked())
+        param->inputNumSystem = 9;
+    else if (ui->inDecSys->isChecked())
+        param->inputNumSystem = 10;
+    else if (ui->in11Sys->isChecked())
+        param->inputNumSystem = 11;
+    else if (ui->in12Sys->isChecked())
+        param->inputNumSystem = 12;
+    else if (ui->in13Sys->isChecked())
+        param->inputNumSystem = 13;
+    else if (ui->in14Sys->isChecked())
+        param->inputNumSystem = 14;
+    else if (ui->in15Sys->isChecked())
+        param->inputNumSystem = 15;
+    else if (ui->inHexSys->isChecked())
+        param->inputNumSystem = 16;
+    else
+        param->inputNumSystem = 0;
     doOperation(InputOfInputNumSystem, &context, param);
     free(param);
 }
 
-void MainWindow::onInputOctSystemClicked() {
+void MainWindow::inputOfOutputNumSys()
+{
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
-    param->inputNumSystem = 8;
-    param->whichInputRadioButton = CheckedInputOctRadioButton;
-    doOperation(InputOfInputNumSystem, &context, param);
-    free(param);
-}
-
-void MainWindow::onInputDecSystemClicked() {
-    AppParams* param = (AppParams*) malloc(sizeof(AppParams));
-    param->inputNumSystem = 10;
-    param->whichInputRadioButton = CheckedInputDecRadioButton;
-    doOperation(InputOfInputNumSystem, &context, param);
-    free(param);
-}
-
-void MainWindow::onOutputBinSystemClicked() {
-    AppParams* param = (AppParams*) malloc(sizeof(AppParams));
-    param->outputNumSystem = 2;
-    param->whichOutputRadioButton = CheckedOutputBinRadioButton;
-    doOperation(InputOfOutputNumSystem, &context, param);
-    free(param);
-}
-
-void MainWindow::onOutputOctSystemClicked() {
-    AppParams* param = (AppParams*) malloc(sizeof(AppParams));
-    param->outputNumSystem = 8;
-    param->whichOutputRadioButton = CheckedOutputOctRadioButton;
-    doOperation(InputOfOutputNumSystem, &context, param);
-    free(param);
-}
-
-void MainWindow::onOutputDecSystemClicked() {
-    AppParams* param = (AppParams*) malloc(sizeof(AppParams));
-    param->outputNumSystem = 10;
-    param->whichOutputRadioButton = CheckedOutputDecRadioButton;
+    if (ui->outBinSys->isChecked())
+        param->outputNumSystem = 2;
+    else if (ui->out3Sys->isChecked())
+        param->outputNumSystem = 3;
+    else if (ui->out4Sys->isChecked())
+        param->outputNumSystem = 4;
+    else if (ui->out5Sys->isChecked())
+        param->outputNumSystem = 5;
+    else if (ui->out6Sys->isChecked())
+        param->outputNumSystem = 6;
+    else if (ui->out7Sys->isChecked())
+        param->outputNumSystem = 7;
+    else if (ui->outOctSys->isChecked())
+        param->outputNumSystem = 8;
+    else if (ui->out9Sys->isChecked())
+        param->outputNumSystem = 9;
+    else if (ui->outDecSys->isChecked())
+        param->outputNumSystem = 10;
+    else if (ui->out11Sys->isChecked())
+        param->outputNumSystem = 11;
+    else if (ui->out12Sys->isChecked())
+        param->outputNumSystem = 12;
+    else if (ui->out13Sys->isChecked())
+        param->outputNumSystem = 13;
+    else if (ui->out14Sys->isChecked())
+        param->outputNumSystem = 14;
+    else if (ui->out15Sys->isChecked())
+        param->outputNumSystem = 15;
+    else if (ui->outHexSys->isChecked())
+        param->outputNumSystem = 16;
+    else
+        param->outputNumSystem = 0;
     doOperation(InputOfOutputNumSystem, &context, param);
     free(param);
 }
 
 void MainWindow::onSwapClicked()
 {
+    AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     std::string str = ui->inputValue->text().toStdString();
     const char* cStr = str.c_str();
-    AppParams* param = (AppParams*)malloc(sizeof(AppParams));
     param->newValue = cStr;
     doOperation(InputOfValue, &context, param);
     doOperation(Validation, &context, param);
-    if (context.errorCode != NoErrors)
+    if (context.errorCode == NoErrors)
     {
-        errorHandler();
-    }
-    else
-    {
-        doOperation(Translate, &context, param);
-        doOperation(Swap, &context, nullptr);
-        inputRadioButtonHandler();
-        outputRadioButtonHandler();
+        param->inputNumSystem = context.inputNumSystem;
+        param->outputNumSystem = context.outputNumSystem;
+        doOperation(Swap, &context, param);
     }
     updateLabel();
     free(param);
@@ -105,38 +125,29 @@ void MainWindow::onCopyClicked()
 
 void MainWindow::onTranslateClicked()
 {
+    inputOfInputNumSys();
+    inputOfOutputNumSys();
     std::string str = ui->inputValue->text().toStdString();
     const char* cStr = str.c_str();
     AppParams* param = (AppParams*)malloc(sizeof(AppParams));
     param->newValue = cStr;
     doOperation(InputOfValue, &context, param);
     doOperation(Validation, &context, param);
-    if (context.errorCode != NoErrors)
-    {
-        errorHandler();
-    }
-    else
-    {
+    if (context.errorCode == NoErrors)
         doOperation(Translate, &context, param);
-        inputRadioButtonHandler();
-        outputRadioButtonHandler();
-    }
     updateLabel();
     free(param);
 }
 
 void MainWindow::updateLabel()
 {
+    inputRadioButtonHandler();
+    outputRadioButtonHandler();
+    ui->inputValue->setText(context.inputValue);
+    ui->translatedValue->setText(context.translatedValue);
+    errorHandler();
     if (context.errorCode != NoErrors)
-    {
         ui->translatedValue->clear();
-    }
-    else
-    {
-        ui->errorLine->clear();
-        ui->inputValue->setText(context.inputValue);
-        ui->translatedValue->setText(context.translatedValue);
-    }
 }
 
 void MainWindow::errorHandler()
@@ -158,37 +169,116 @@ void MainWindow::errorHandler()
     case(ExitFromInt):
         ui->errorLine->setText(EXIT_FROM_INT);
         break;
+    case(NoInputOrOutput):
+        ui->errorLine->setText(NO_INPUT_OR_OUTPUT);
+        break;
+    case(NoErrors):
+        ui->errorLine->clear();
+        break;
     }
+
 }
 
 void MainWindow::inputRadioButtonHandler()
 {
-    switch(context.whichInputRadioButton)
+    switch(context.inputNumSystem)
     {
-    case(CheckedInputBinRadioButton):
+    case(BINARY):
         ui->inBinSys->setChecked(true);
         break;
-    case(CheckedInputOctRadioButton):
+    case(TERNARY):
+        ui->in3Sys->setChecked(true);
+        break;
+    case(QUATERNARY):
+        ui->in4Sys->setChecked(true);
+        break;
+    case(QUINARY):
+        ui->in5Sys->setChecked(true);
+        break;
+    case(SENARY):
+        ui->in6Sys->setChecked(true);
+        break;
+    case(SEPTENARY):
+        ui->in7Sys->setChecked(true);
+        break;
+    case(OCTAL):
         ui->inOctSys->setChecked(true);
         break;
-    case(CheckedInputDecRadioButton):
+    case(NONARY):
+        ui->in9Sys->setChecked(true);
+        break;
+    case(DECIMAL):
         ui->inDecSys->setChecked(true);
+        break;
+    case(UNDECIMAL):
+        ui->in11Sys->setChecked(true);
+        break;
+    case(DUODECIMAL):
+        ui->in12Sys->setChecked(true);
+        break;
+    case(TRIDECIMAL):
+        ui->in13Sys->setChecked(true);
+        break;
+    case(TETRADECIMAL):
+        ui->in14Sys->setChecked(true);
+        break;
+    case(PENTADECIMAL):
+        ui->in15Sys->setChecked(true);
+        break;
+    case(HEXADECIMAL):
+        ui->inHexSys->setChecked(true);
         break;
     }
 }
 
 void MainWindow::outputRadioButtonHandler()
 {
-    switch(context.whichOutputRadioButton)
+    switch(context.outputNumSystem)
     {
-    case(CheckedOutputBinRadioButton):
+    case(BINARY):
         ui->outBinSys->setChecked(true);
         break;
-    case(CheckedOutputOctRadioButton):
+    case(TERNARY):
+        ui->out3Sys->setChecked(true);
+        break;
+    case(QUATERNARY):
+        ui->out4Sys->setChecked(true);
+        break;
+    case(QUINARY):
+        ui->out5Sys->setChecked(true);
+        break;
+    case(SENARY):
+        ui->out6Sys->setChecked(true);
+        break;
+    case(SEPTENARY):
+        ui->out7Sys->setChecked(true);
+        break;
+    case(OCTAL):
         ui->outOctSys->setChecked(true);
         break;
-    case(CheckedOutputDecRadioButton):
+    case(NONARY):
+        ui->out9Sys->setChecked(true);
+        break;
+    case(DECIMAL):
         ui->outDecSys->setChecked(true);
+        break;
+    case(UNDECIMAL):
+        ui->out11Sys->setChecked(true);
+        break;
+    case(DUODECIMAL):
+        ui->out12Sys->setChecked(true);
+        break;
+    case(TRIDECIMAL):
+        ui->out13Sys->setChecked(true);
+        break;
+    case(TETRADECIMAL):
+        ui->out14Sys->setChecked(true);
+        break;
+    case(PENTADECIMAL):
+        ui->out15Sys->setChecked(true);
+        break;
+    case(HEXADECIMAL):
+        ui->outHexSys->setChecked(true);
         break;
     }
 }

@@ -14,36 +14,10 @@ enum Operation
     Swap
 };
 
-enum Errors
-{
-    ExitFromInt,
-    IncorrectCombibationOfSymbols,
-    NotCheckedInputNumSystem,
-    NotCheckedOutputNumSystem,
-    NotCheckedNumSystems,
-    NoErrors
-};
-
-enum CheckedInputRadioButton
-{
-    CheckedInputBinRadioButton,
-    CheckedInputOctRadioButton,
-    CheckedInputDecRadioButton
-};
-
-enum CheckedOutputRadioButton
-{
-    CheckedOutputBinRadioButton,
-    CheckedOutputOctRadioButton,
-    CheckedOutputDecRadioButton
-};
-
 struct AppParams {
     const char* newValue;
     int inputNumSystem;
     int outputNumSystem;
-    int whichInputRadioButton;
-    int whichOutputRadioButton;
 };
 
 void doOperation(Operation operation, AppContext* context, AppParams* params);

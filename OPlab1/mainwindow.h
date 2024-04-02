@@ -11,6 +11,22 @@
 #define NOT_CHECKED_NUM_SYSTEMS "Не выбраны системы счисления"
 #define INCORRECT_COMBINATION_OF_SYMBOLS "Введена недопустимая комбинация символов для выбранной системы счисления"
 #define EXIT_FROM_INT "Выход за пределы значений 4-х байтового знакового целого числа"
+#define NO_INPUT_OR_OUTPUT "Нет входного либо выходного числа"
+#define BINARY 2
+#define TERNARY 3
+#define QUATERNARY 4
+#define QUINARY 5
+#define SENARY 6
+#define SEPTENARY 7
+#define OCTAL 8
+#define NONARY 9
+#define DECIMAL 10
+#define UNDECIMAL 11
+#define DUODECIMAL 12
+#define TRIDECIMAL 13
+#define TETRADECIMAL 14
+#define PENTADECIMAL 15
+#define HEXADECIMAL 16
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,12 +44,8 @@ public:
     AppContext context;
 
 private slots:
-    void onInputBinSystemClicked();
-    void onInputOctSystemClicked();
-    void onInputDecSystemClicked();
-    void onOutputBinSystemClicked();
-    void onOutputOctSystemClicked();
-    void onOutputDecSystemClicked();
+    void inputOfInputNumSys();
+    void inputOfOutputNumSys();
     void onSwapClicked();
     void onCopyClicked();
     void onTranslateClicked();

@@ -1,15 +1,13 @@
 #ifndef APPCONTEXT_H
 #define APPCONTEXT_H
+#include "errors.h"
 
 struct AppContext {
     const char* inputValue;
+    const char* translatedValue;
     int inputNumSystem;
     int outputNumSystem;
-    int whichInputRadioButton;
-    int whichOutputRadioButton;
-    const char* translatedValue;
-    char errorLine[200];
-    int errorCode;
+    Errors errorCode;
 };
 
 #endif // APPCONTEXT_H
