@@ -22,7 +22,7 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
         translate(context, params->newValue);
         break;
     case Swap:
-        swap(context, params->newValue, params->inputNumSystem, params->outputNumSystem);
+        swap(context, params->newValue, context->inputNumSystem, context->outputNumSystem);
         break;
     }
 }

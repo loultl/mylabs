@@ -9,7 +9,7 @@ enum Errors
     NotCheckedOutputNumSystem,
     NotCheckedNumSystems,
     NoErrors,
-    NoInputOrOutput
+    NoOutputForSwap
 };
 
 #endif // ERRORS_H

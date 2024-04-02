@@ -18,10 +18,10 @@ char* toLower(const char* str)
 
 void initialize(AppContext* context)
 {
-    context->translatedValue = EMPTY_LINE;
     context->inputValue = EMPTY_LINE;
-    context->inputNumSystem = 0;
-    context->outputNumSystem = 0;
+    context->translatedValue = EMPTY_LINE;
+    context->inputNumSystem = DEFAULT_VALUE;
+    context->outputNumSystem = DEFAULT_VALUE;
     context->errorCode = NoErrors;
 }
 
@@ -197,10 +197,12 @@ void validate(AppContext* context, const char* input, int swapStatus)
     if (checkForSymbols(context->inputNumSystem, lowInputStr))
     {
         context->errorCode = IncorrectCombibationOfSymbols;
+        context->translatedValue = EMPTY_LINE;
     }
     else if (checkForSize(context->inputNumSystem, lowInputStr))
     {
         context->errorCode = ExitFromInt;
+        context->translatedValue = EMPTY_LINE;
     }
     free(lowInputStr);
 
@@ -216,12 +218,10 @@ void validate(AppContext* context, const char* input, int swapStatus)
 
     if (swapStatus && context->errorCode == NoErrors)
     {
-        char* newOutput = decToSomething(toDec(input, context->inputNumSystem), context->outputNumSystem);
-        if (strcmp(context->translatedValue, newOutput) != 0)
+        if (strcmp(context->translatedValue, "") == 0)
         {
-            context->errorCode = NoInputOrOutput;
+            context->errorCode = NoOutputForSwap;
         }
-        free(newOutput);
     }
 }
 

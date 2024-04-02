@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "entrypoint.h"
-#include "logic.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -104,15 +103,13 @@ void MainWindow::onSwapClicked()
     std::string str = ui->inputValue->text().toStdString();
     const char* cStr = str.c_str();
     param->newValue = cStr;
+
     doOperation(InputOfValue, &context, param);
-    doOperation(Validation, &context, param);
-    if (context.errorCode == NoErrors)
-    {
-        param->inputNumSystem = context.inputNumSystem;
-        param->outputNumSystem = context.outputNumSystem;
-        doOperation(Swap, &context, param);
-    }
     updateLabel();
+
+    doOperation(Swap, &context, param);
+    updateLabel();
+
     free(param);
 }
 
@@ -131,11 +128,19 @@ void MainWindow::onTranslateClicked()
     const char* cStr = str.c_str();
     AppParams* param = (AppParams*)malloc(sizeof(AppParams));
     param->newValue = cStr;
+
     doOperation(InputOfValue, &context, param);
-    doOperation(Validation, &context, param);
-    if (context.errorCode == NoErrors)
-        doOperation(Translate, &context, param);
     updateLabel();
+
+    doOperation(Validation, &context, param);
+    updateLabel();
+
+    if (context.errorCode == NoErrors)
+    {
+        doOperation(Translate, &context, param);
+        updateLabel();
+    }
+
     free(param);
 }
 
@@ -169,8 +174,8 @@ void MainWindow::errorHandler()
     case(ExitFromInt):
         ui->errorLine->setText(EXIT_FROM_INT);
         break;
-    case(NoInputOrOutput):
-        ui->errorLine->setText(NO_INPUT_OR_OUTPUT);
+    case(NoOutputForSwap):
+        ui->errorLine->setText(NO_OUTPUT_FOR_SWAP);
         break;
     case(NoErrors):
         ui->errorLine->clear();
