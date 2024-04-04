@@ -16,7 +16,7 @@ void doOperation(Operation operation, AppContext* context, AppParams* params) {
         inputOfValue(context, params->newValue);
         break;
     case Validation:
-        validate(context, params->newValue, 0);
+        validate(context, params->newValue, SWAP_STATUS_OFF);
         break;
     case Translate:
         translate(context, params->newValue);

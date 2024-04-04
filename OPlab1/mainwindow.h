@@ -12,6 +12,8 @@
 #define INCORRECT_COMBINATION_OF_SYMBOLS "Введена недопустимая комбинация символов для выбранной системы счисления"
 #define EXIT_FROM_INT "Выход за пределы значений 4-х байтового знакового целого числа"
 #define NO_OUTPUT_FOR_SWAP "Не с чем менять входное значение"
+
+#define DEFAULT_VALUE 0
 #define BINARY 2
 #define TERNARY 3
 #define QUATERNARY 4

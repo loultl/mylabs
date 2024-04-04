@@ -23,37 +23,37 @@ void MainWindow::inputOfInputNumSys()
 {
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     if (ui->inBinSys->isChecked())
-        param->inputNumSystem = 2;
+        param->inputNumSystem = BINARY;
     else if (ui->in3Sys->isChecked())
-        param->inputNumSystem = 3;
+        param->inputNumSystem = TERNARY;
     else if (ui->in4Sys->isChecked())
-        param->inputNumSystem = 4;
+        param->inputNumSystem = QUATERNARY;
     else if (ui->in5Sys->isChecked())
-        param->inputNumSystem = 5;
+        param->inputNumSystem = QUINARY;
     else if (ui->in6Sys->isChecked())
-        param->inputNumSystem = 6;
+        param->inputNumSystem = SENARY;
     else if (ui->in7Sys->isChecked())
-        param->inputNumSystem = 7;
+        param->inputNumSystem = SEPTENARY;
     else if (ui->inOctSys->isChecked())
-        param->inputNumSystem = 8;
+        param->inputNumSystem = OCTAL;
     else if (ui->in9Sys->isChecked())
-        param->inputNumSystem = 9;
+        param->inputNumSystem = NONARY;
     else if (ui->inDecSys->isChecked())
-        param->inputNumSystem = 10;
+        param->inputNumSystem = DECIMAL;
     else if (ui->in11Sys->isChecked())
-        param->inputNumSystem = 11;
+        param->inputNumSystem = UNDECIMAL;
     else if (ui->in12Sys->isChecked())
-        param->inputNumSystem = 12;
+        param->inputNumSystem = DUODECIMAL;
     else if (ui->in13Sys->isChecked())
-        param->inputNumSystem = 13;
+        param->inputNumSystem = TRIDECIMAL;
     else if (ui->in14Sys->isChecked())
-        param->inputNumSystem = 14;
+        param->inputNumSystem = TETRADECIMAL;
     else if (ui->in15Sys->isChecked())
-        param->inputNumSystem = 15;
+        param->inputNumSystem = PENTADECIMAL;
     else if (ui->inHexSys->isChecked())
-        param->inputNumSystem = 16;
+        param->inputNumSystem = HEXADECIMAL;
     else
-        param->inputNumSystem = 0;
+        param->inputNumSystem = DEFAULT_VALUE;
     doOperation(InputOfInputNumSystem, &context, param);
     free(param);
 }
@@ -62,37 +62,37 @@ void MainWindow::inputOfOutputNumSys()
 {
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     if (ui->outBinSys->isChecked())
-        param->outputNumSystem = 2;
+        param->outputNumSystem = BINARY;
     else if (ui->out3Sys->isChecked())
-        param->outputNumSystem = 3;
+        param->outputNumSystem = TERNARY;
     else if (ui->out4Sys->isChecked())
-        param->outputNumSystem = 4;
+        param->outputNumSystem = QUATERNARY;
     else if (ui->out5Sys->isChecked())
-        param->outputNumSystem = 5;
+        param->outputNumSystem = QUINARY;
     else if (ui->out6Sys->isChecked())
-        param->outputNumSystem = 6;
+        param->outputNumSystem = SENARY;
     else if (ui->out7Sys->isChecked())
-        param->outputNumSystem = 7;
+        param->outputNumSystem = SEPTENARY;
     else if (ui->outOctSys->isChecked())
-        param->outputNumSystem = 8;
+        param->outputNumSystem = OCTAL;
     else if (ui->out9Sys->isChecked())
-        param->outputNumSystem = 9;
+        param->outputNumSystem = NONARY;
     else if (ui->outDecSys->isChecked())
-        param->outputNumSystem = 10;
+        param->outputNumSystem = DECIMAL;
     else if (ui->out11Sys->isChecked())
-        param->outputNumSystem = 11;
+        param->outputNumSystem = UNDECIMAL;
     else if (ui->out12Sys->isChecked())
-        param->outputNumSystem = 12;
+        param->outputNumSystem = DUODECIMAL;
     else if (ui->out13Sys->isChecked())
-        param->outputNumSystem = 13;
+        param->outputNumSystem = TRIDECIMAL;
     else if (ui->out14Sys->isChecked())
-        param->outputNumSystem = 14;
+        param->outputNumSystem = TETRADECIMAL;
     else if (ui->out15Sys->isChecked())
-        param->outputNumSystem = 15;
+        param->outputNumSystem = PENTADECIMAL;
     else if (ui->outHexSys->isChecked())
-        param->outputNumSystem = 16;
+        param->outputNumSystem = HEXADECIMAL;
     else
-        param->outputNumSystem = 0;
+        param->outputNumSystem = DEFAULT_VALUE;
     doOperation(InputOfOutputNumSystem, &context, param);
     free(param);
 }
@@ -102,7 +102,7 @@ void MainWindow::onSwapClicked()
     AppParams* param = (AppParams*) malloc(sizeof(AppParams));
     std::string str = ui->inputValue->text().toStdString();
     const char* cStr = str.c_str();
-    param->newValue = cStr;
+    param->newValue = (char*)cStr;
 
     doOperation(InputOfValue, &context, param);
     updateLabel();
@@ -127,7 +127,7 @@ void MainWindow::onTranslateClicked()
     std::string str = ui->inputValue->text().toStdString();
     const char* cStr = str.c_str();
     AppParams* param = (AppParams*)malloc(sizeof(AppParams));
-    param->newValue = cStr;
+    param->newValue = (char*)cStr;
 
     doOperation(InputOfValue, &context, param);
     updateLabel();

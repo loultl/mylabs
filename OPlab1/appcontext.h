@@ -3,11 +3,11 @@
 #include "errors.h"
 
 struct AppContext {
-    const char* inputValue;
-    const char* translatedValue;
+    char* inputValue;
+    char* translatedValue;
     int inputNumSystem;
     int outputNumSystem;
-    Errors errorCode;
+    Error errorCode;
 };
 
 #endif // APPCONTEXT_H

@@ -15,7 +15,7 @@ enum Operation
 };
 
 struct AppParams {
-    const char* newValue;
+    char* newValue;
     int inputNumSystem;
     int outputNumSystem;
 };

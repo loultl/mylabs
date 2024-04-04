@@ -18,8 +18,8 @@ char* toLower(const char* str)
 
 void initialize(AppContext* context)
 {
-    context->inputValue = EMPTY_LINE;
-    context->translatedValue = EMPTY_LINE;
+    context->inputValue = NULL;
+    context->translatedValue = NULL;
     context->inputNumSystem = DEFAULT_VALUE;
     context->outputNumSystem = DEFAULT_VALUE;
     context->errorCode = NoErrors;
@@ -35,28 +35,38 @@ void inputOfOutputNumSystem(AppContext* context, int outputNumSys)
     context->outputNumSystem = outputNumSys;
 }
 
-void inputOfValue(AppContext* context, const char* newValue)
+void inputOfValue(AppContext* context, char* newValue)
 {
     context->inputValue = newValue;
 }
 
-void translate(AppContext* context, const char* newValue)
+void translate(AppContext* context, char* newValue)
 {
     if (context->inputNumSystem == context->outputNumSystem)
     {
-        context->translatedValue = toLower(newValue);
+        char* newTranslatedValue = toLower(newValue);
+        free(context->translatedValue);
+        context->translatedValue = newTranslatedValue;
     }
-    else if (context->inputNumSystem == 10)
-    {
-        context->translatedValue = decToSomething(newValue, context->outputNumSystem);
+    else if (context->inputNumSystem == DECIMAL)
+    {  
+        char* newTranslatedValue = decToSomething(newValue, context->outputNumSystem);
+        free(context->translatedValue);
+        context->translatedValue = newTranslatedValue;
     }
-    else if (context->outputNumSystem == 10)
-    {
-        context->translatedValue = toDec(newValue, context->inputNumSystem);
+    else if (context->outputNumSystem == DECIMAL)
+    {   
+        char* newTranslatedValue = toDec(newValue, context->inputNumSystem);
+        free(context->translatedValue);
+        context->translatedValue = newTranslatedValue;
     }
     else
     {
-        context->translatedValue = decToSomething(toDec(newValue, context->inputNumSystem), context->outputNumSystem);
+        char* newTranslatedValueToDec = toDec(newValue, context->inputNumSystem);
+        char* newTranslatedValueToSystem = decToSomething(newTranslatedValueToDec, context->outputNumSystem);
+        free(newTranslatedValueToDec);
+        free(context->translatedValue);
+        context->translatedValue = newTranslatedValueToSystem;
     }
 }
 
@@ -131,12 +141,14 @@ int checkBinSize(const char* input)
 int checkOtherSize(int inputNumSystem, const char* input)
 {
     int checkState = 0;
-    char* newInput = decToSomething(toDec(input, inputNumSystem), inputNumSystem);
-    if (strcmp(input, newInput) != 0)
+    char* newInputToDec = toDec(input, inputNumSystem);
+    char* newInputToSystem = decToSomething(newInputToDec, inputNumSystem);
+    free(newInputToDec);
+    if (strcmp(input, newInputToSystem) != 0)
     {
         checkState = 1;
     }
-    free(newInput);
+    free(newInputToSystem);
     return checkState;
 }
 
@@ -145,11 +157,11 @@ int checkForSize(int inputNumSystem, const char* input)
     int sizeCheckState = 0;
     switch(inputNumSystem)
     {
-    case 2:
+    case BINARY:
         if (checkBinSize(input))
             sizeCheckState = 1;
         break;
-    case 10:
+    case DECIMAL:
         if (checkDecSize(input))
             sizeCheckState = 1;
         break;
@@ -197,12 +209,12 @@ void validate(AppContext* context, const char* input, int swapStatus)
     if (checkForSymbols(context->inputNumSystem, lowInputStr))
     {
         context->errorCode = IncorrectCombibationOfSymbols;
-        context->translatedValue = EMPTY_LINE;
+        context->translatedValue = NULL;
     }
     else if (checkForSize(context->inputNumSystem, lowInputStr))
     {
         context->errorCode = ExitFromInt;
-        context->translatedValue = EMPTY_LINE;
+        context->translatedValue = NULL;
     }
     free(lowInputStr);
 
@@ -218,7 +230,7 @@ void validate(AppContext* context, const char* input, int swapStatus)
 
     if (swapStatus && context->errorCode == NoErrors)
     {
-        if (strcmp(context->translatedValue, "") == 0)
+        if (context->translatedValue == NULL)
         {
             context->errorCode = NoOutputForSwap;
         }
@@ -226,7 +238,7 @@ void validate(AppContext* context, const char* input, int swapStatus)
 }
 
 void swap(AppContext* context, const char* inputValue, int inNumberSystem, int outNumberSystem) {
-    validate(context ,inputValue, 1);
+    validate(context ,inputValue, SWAP_STATUS_ON);
     if (context->errorCode == NoErrors) {
         context->inputValue = context->translatedValue;
         context->inputNumSystem = outNumberSystem;

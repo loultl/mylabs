@@ -1,7 +1,7 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
-enum Errors
+enum Error
 {
     ExitFromInt,
     IncorrectCombibationOfSymbols,
