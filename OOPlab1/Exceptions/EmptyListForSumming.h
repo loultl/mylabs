@@ -1,0 +1,24 @@
+//
+// Created by Home on 08.04.2024.
+//
+
+#ifndef FIRST_LAB_EMPTYLISTFORSUMMING_H
+#define FIRST_LAB_EMPTYLISTFORSUMMING_H
+
+#include <stdexcept>
+#include <string>
+
+#define EMPTY_LIST_FOR_SUMMING "The list of figures is empty. There is nothing to summarize"
+
+class EmptyListForSumming : public std::exception {
+private:
+    std::string message;
+
+public:
+    explicit EmptyListForSumming(const std::string& msg) : message(msg) {}
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+};
+
+#endif //FIRST_LAB_EMPTYLISTFORSUMMING_H
