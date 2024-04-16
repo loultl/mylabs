@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 
-#define INVALID_MENU_OPTION "Interface option not found"
+#define INVALID_MENU_OPTION "There is no such interface option for your choice"
 
 class InterfaceOptionException : public std::exception {
 private:

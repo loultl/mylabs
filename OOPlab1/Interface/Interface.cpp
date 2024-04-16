@@ -8,16 +8,17 @@ void Interface::runInterface() {
     interfaceRunningStatus = 1;
     initializeInterfaceOptions();
     initializeShapesOptions();
-    int choice;
+
     do {
         showInterface();
-        std::cin >> choice;
-        if (std::cin.fail())
-        {
-            std::cin.clear();
-            std::cin.ignore(32767, '\n');
-        }
         try {
+            int choice;
+            if (!checkForInt(choice)) {
+                std::cin.clear();
+                std::cin.ignore(32767, '\n');
+                throw InterfaceOptionException(INVALID_MENU_OPTION);
+            }
+            std::cout << "\n";
             callMethod(choice);
         } catch (const BadInputType &error) {
             std::cerr << error.what() << "\n";
@@ -25,17 +26,9 @@ void Interface::runInterface() {
             std::cerr << error.what() << "\n";
         } catch (const BadShapeName &error) {
             std::cerr << error.what() << "\n";
-        } catch (const EmptyListForShowing &error) {
-            std::cerr << error.what() << "\n";
-        } catch (const EmptyListForDeletion &error) {
-            std::cerr << error.what() << "\n";
-        } catch (const EmptyListForSorting &error) {
-            std::cerr << error.what() << "\n";
-        } catch (const EmptyListForSumming &error) {
+        } catch (const EmptyList &error) {
             std::cerr << error.what() << "\n";
         } catch (const BadIndexForDeletion &error) {
-            std::cerr << error.what() << "\n";
-        } catch (const BadAmountOfVertices &error) {
             std::cerr << error.what() << "\n";
         } catch (const InterfaceOptionException &error) {
             std::cerr << error.what() << "\n";
@@ -63,12 +56,12 @@ void Interface::addShape() {
                  "Rectangle (2)\n"
                  "Polygon (3)\n"
                  "Circle (4)\n";
-    std::cin >> choice;
-    if (std::cin.fail())
-    {
+    if (!checkForInt(choice)) {
         std::cin.clear();
         std::cin.ignore(32767, '\n');
+        throw BadShapeName(BAD_FIGURE_NAME);
     }
+    std::cout << "\n";
     callShapeMethod(choice);
     std::cout << "Shape added successfully!\n";
 }
@@ -89,11 +82,11 @@ Triangle *Interface::getTriangle() {
     auto yOfSecondPoint = getValue<double>();
     auto xOfThirdPoint = getValue<double>();
     auto yOfThirdPoint = getValue<double>();
-    Point firstCoordinate(xOfFirstPoint, yOfFirstPoint);
-    Point secondCoordinate(xOfSecondPoint, yOfSecondPoint);
-    Point thirdCoordinate(xOfThirdPoint, yOfThirdPoint);
+    Point firstPoint(xOfFirstPoint, yOfFirstPoint);
+    Point secondPoint(xOfSecondPoint, yOfSecondPoint);
+    Point thirdPoint(xOfThirdPoint, yOfThirdPoint);
     std::cin.ignore(32767, '\n');
-    return new Triangle(name, firstCoordinate, secondCoordinate, thirdCoordinate);
+    return new Triangle(name, firstPoint, secondPoint, thirdPoint);
 }
 
 void Interface::addCircle() {
@@ -147,7 +140,7 @@ Polygon *Interface::getPolygon() {
     std::cout << "Enter how many vertices your shape will have:\n";
     int amountOfVertices = getValue<int>();
     if (amountOfVertices < 3) {
-        throw BadAmountOfVertices(BAD_AMOUNT_OF_VERTICES);
+        throw ShapeExistanceException(SHAPE_EXISTANCE_ERROR);
     }
     std::cout << "Enter coordinates of " << amountOfVertices << " points:\n";
     std::vector<Point *> coordinates;
@@ -164,7 +157,7 @@ Polygon *Interface::getPolygon() {
 void Interface::showShapes() {
     unsigned counter = 1;
     if (shapes.empty()) {
-        throw EmptyListForShowing(EMPTY_LIST_FOR_SHOWING);
+        throw EmptyList(EMPTY_LIST);
     }
     for (const auto &shape: shapes) {
         std::cout << counter << ". ";
@@ -176,7 +169,7 @@ void Interface::showShapes() {
 void Interface::showPerimeters() {
     unsigned counter = 1;
     if (shapes.empty()) {
-        throw EmptyListForShowing(EMPTY_LIST_FOR_SHOWING);
+        throw EmptyList(EMPTY_LIST);
     }
     for (const auto &shape: shapes) {
         std::cout << counter << ". ";
@@ -187,7 +180,7 @@ void Interface::showPerimeters() {
 
 void Interface::printSumOfPerimeters() {
     if (shapes.empty()) {
-        throw EmptyListForSumming(EMPTY_LIST_FOR_SUMMING);
+        throw EmptyList(EMPTY_LIST);
     }
     double sum = 0;
     for (const auto &shape: shapes) {
@@ -198,7 +191,7 @@ void Interface::printSumOfPerimeters() {
 
 void Interface::sortShapesByPerimeter() {
     if (shapes.empty()) {
-        throw EmptyListForSorting(EMPTY_LIST_FOR_SORTING);
+        throw EmptyList(EMPTY_LIST);
     }
     std::sort(shapes.begin(), shapes.end(), comparePerimeter);
     std::cout << "Shapes have been sorted!: " << "\n";
@@ -210,7 +203,7 @@ bool Interface::comparePerimeter(Shape *f1, Shape *f2) {
 
 void Interface::deleteShapeByIndex() {
     if (shapes.empty()) {
-        throw EmptyListForDeletion(EMPTY_LIST_FOR_DELETION);
+        throw EmptyList(EMPTY_LIST);
     }
     std::cout << "Enter an index of a shape you want to delete: " << "\n";
     int index = getValue<int>();
@@ -224,7 +217,7 @@ void Interface::deleteShapeByIndex() {
 
 void Interface::deleteShapesByPerimeter() {
     if (shapes.empty()) {
-        throw EmptyListForDeletion(EMPTY_LIST_FOR_DELETION);
+        throw EmptyList(EMPTY_LIST);
     }
     std::cout << "Enter a value to delete shapes with larger perimeters: " << "\n";
     auto enteredValue = getValue<double>();
@@ -241,7 +234,7 @@ void Interface::exitFromInterface() {
     interfaceRunningStatus = 0;
 }
 
-void Interface::callMethod(const int& methodName) {
+void Interface::callMethod(const int &methodName) {
     auto it = interfaceOptions.find(methodName);
     if (it != interfaceOptions.end()) {
         (this->*(it->second))();
@@ -250,7 +243,7 @@ void Interface::callMethod(const int& methodName) {
     }
 }
 
-void Interface::callShapeMethod(const int& methodName) {
+void Interface::callShapeMethod(const int &methodName) {
     auto it = figuresOptions.find(methodName);
     if (it != figuresOptions.end()) {
         (this->*(it->second))();
@@ -277,11 +270,26 @@ void Interface::initializeShapesOptions() {
     figuresOptions[4] = &Interface::addCircle;
 }
 
+int Interface::checkForInt(int &choice) {
+    int correctInput = 1;
+    std::string stringForCheck;
+    std::cin >> stringForCheck;
+    for (char i: stringForCheck) {
+        if (!isdigit(i)) {
+            correctInput = 0;
+            break;
+        }
+    }
+    choice = atoi(stringForCheck.c_str());
+    return correctInput;
+
+}
+
+
 template<typename T>
 T Interface::getValue() {
     T value;
     std::cin >> value;
-
     if (std::cin.fail()) {
         std::cin.clear();
         std::cin.ignore(32767, '\n');

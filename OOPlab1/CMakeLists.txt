@@ -18,11 +18,7 @@ add_executable(first_lab main.cpp
         Point/Point.cpp
         Point/Point.h
         Exceptions/ShapeExistanceException.h
-        Exceptions/EmptyListForDeletion.h
-        Exceptions/EmptyListForShowing.h
-        Exceptions/EmptyListForSorting.h
-        Exceptions/EmptyListForSumming.h
-        Exceptions/BadAmountOfVertices.h
+        Exceptions/EmptyList.h
         Exceptions/BadShapeName.h
         Exceptions/BadIndexForDeletion.h
         Exceptions/BadInputType.h

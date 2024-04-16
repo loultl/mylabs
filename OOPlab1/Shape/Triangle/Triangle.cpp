@@ -29,5 +29,5 @@ double Triangle::findPerimeter() {
 void Triangle::showPerimeter() {
     std::cout << "Name: " << name << "\n";
     std::cout << "Type: Triangle\n";
-    std::cout << "Perimeter: " << this->findPerimeter() << "\n";
+    std::cout << "Perimeter: " << findPerimeter() << "\n";
 }

@@ -25,5 +25,5 @@ double Rectangle::findPerimeter() {
 void Rectangle::showPerimeter() {
     std::cout << "Name: " << name << "\n";
     std::cout << "Type: Rectangle\n";
-    std::cout << "Perimeter: " << this->findPerimeter() << "\n";
+    std::cout << "Perimeter: " << findPerimeter() << "\n";
 }

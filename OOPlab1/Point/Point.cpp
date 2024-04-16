@@ -4,12 +4,8 @@
 
 #include "Point.h"
 
-double Point::getX() {
-    return x;
-}
+double Point::getX() { return x; }
 
-double Point::getY() {
-    return y;
-}
+double Point::getY() { return y; }
 
-Point::Point(double cX, double cY): x(cX) , y(cY) {}
+Point::Point(double cX, double cY) : x(cX), y(cY) {}

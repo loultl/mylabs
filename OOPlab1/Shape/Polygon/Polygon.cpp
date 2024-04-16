@@ -46,7 +46,7 @@ double Polygon::findPerimeter() {
 void Polygon::showPerimeter() {
     std::cout << "Name: " << name << "\n";
     std::cout << "Type: Polygon\n";
-    std::cout << "Perimeter: " << this->findPerimeter() << "\n";
+    std::cout << "Perimeter: " << findPerimeter() << "\n";
 }
 
 double orientation(Point* a, Point* b, Point* c) {

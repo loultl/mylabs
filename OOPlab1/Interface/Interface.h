@@ -18,14 +18,10 @@
 #include "../Shape/Circle/Circle.h"
 #include "../Exceptions/ShapeExistanceException.h"
 #include "../Exceptions/InterfaceOptionException.h"
-#include "../Exceptions/BadAmountOfVertices.h"
 #include "../Exceptions/BadShapeName.h"
 #include "../Exceptions/BadIndexForDeletion.h"
 #include "../Exceptions/BadInputType.h"
-#include "../Exceptions/EmptyListForDeletion.h"
-#include "../Exceptions/EmptyListForShowing.h"
-#include "../Exceptions/EmptyListForSorting.h"
-#include "../Exceptions/EmptyListForSumming.h"
+#include "../Exceptions/EmptyList.h"
 
 class Interface {
 private:
@@ -63,6 +59,7 @@ private:
 
     template<typename T>
     T getValue();
+    int checkForInt(int &choice);
     static bool comparePerimeter(Shape* f1, Shape* f2);
 
 public:
