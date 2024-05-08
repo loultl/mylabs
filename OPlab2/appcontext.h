@@ -2,9 +2,10 @@
 #define APPCONTEXT_H
 
 #include "list.h"
-#include "errors.h"
+#include "error.h"
 
 struct AppContext {
+    char tableHeader[LINE_MAX_LENGHT];
     double min;
     double max;
     double median;

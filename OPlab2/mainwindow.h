@@ -10,7 +10,7 @@
 #include <string>
 #include <QTableView>
 #include <QStandardItemModel>
-#include "errors.h"
+#include "error.h"
 
 #define NO_ERRORS "Ошибок нет"
 #define COLUMN_ERROR "Некорректный номер столбца"
@@ -19,6 +19,7 @@
 #define FILE_ERROR "Файл не может быть открыт"
 #define EMPTY_TABLE_ERROR "В таблице нет данных, невозможно посчитать параметры"
 #define ALLOCATION_ERROR "Память не может быть выделена"
+#define INIT_ROWS 0
 
 
 QT_BEGIN_NAMESPACE

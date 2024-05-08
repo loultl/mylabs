@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define LINE_MAX_LENGHT 100
+#define LINE_MAX_LENGHT 1024
 
 struct FileLine {
     int year;

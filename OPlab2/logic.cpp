@@ -1,4 +1,6 @@
 #include "logic.h"
+#include "qdebug.h"
+#include "qlogging.h"
 
 void initialize(AppContext* context) {
     context->min = INITIALIZE_METRICS_VALUE;
@@ -37,42 +39,54 @@ void load(AppContext* context) {
 
         if (file) {
             char* fline = (char*)malloc(LINE_MAX_LENGHT);
-            if (fline == NULL) {
-                context->errorData = MemoryAllocationError;
+
+            readline(file, fline);
+            strcpy(context->tableHeader, fline);
+            qDebug() << context->tableHeader;
+            free(fline);
+
+            char* line = (char*)malloc(LINE_MAX_LENGHT);
+            int successRead = readline(file, line);
+            FileLine firstLine;
+            int numberOfLines = 0;
+            int numberOfErrorLines = 0;
+            int numberOfSuccessLines = 0;
+            if (successRead && addLineToStruct(line, &firstLine)) {
+                numberOfSuccessLines++;
             } else {
-
-                readline(file, fline);
-                free(fline);
-
+                numberOfErrorLines++;
+            }
+            numberOfLines++;
+            free(line);
+            int freeList = 0;
+            List* list = init(firstLine);
+            while (!feof(file)) {
+                FileLine currentLine;
                 char* line = (char*)malloc(LINE_MAX_LENGHT);
                 if (line == NULL) {
                     context->errorData = MemoryAllocationError;
+                    freeList = 1;
+                    break;
                 } else {
                     int successRead = readline(file, line);
-                    FileLine firstLine;
-                    int numberOfLines = 0;
-                    int numberOfErrorLines = 0;
-                    int numberOfSuccessLines = 0;
-                    if (successRead && addLineToStruct(line, &firstLine)) {
-                        numberOfSuccessLines++;
+                    if (successRead && addLineToStruct(line, &currentLine)) {
+                        numberOfSuccessLines+=1;
+                        pushEnd(list, currentLine);
                     } else {
-                        numberOfErrorLines++;
+                        numberOfErrorLines+=1;
                     }
-                    numberOfLines++;
+                    numberOfLines+=1;
                     free(line);
-                    int freeList = 0;
-                    List* list = init(firstLine);
-                    fillList(file, list, context, &freeList, &numberOfSuccessLines, &numberOfErrorLines, &numberOfLines);
-                    if (!freeList) {
-                        context->table = list;
-                        context->numberOfErrorLines = numberOfErrorLines;
-                        context->numberOfLines = numberOfLines;
-                        context->numberOfSuccessLines = numberOfSuccessLines;
-                        context->errorData = NoErrors;
-                    } else {
-                        deleteList(list);
-                    }
                 }
+            }
+            if (!freeList) {
+                context->table = list;
+                context->numberOfErrorLines = numberOfErrorLines;
+                context->numberOfLines = numberOfLines;
+                context->numberOfSuccessLines = numberOfSuccessLines;
+                context->errorData = NoErrors;
+            } else {
+                deleteList(list);
             }
             fclose(file);
         } else {
@@ -80,28 +94,6 @@ void load(AppContext* context) {
         }
     }
 
-}
-
-void fillList(FILE* file, List* list, AppContext* context, int* freeList, int* numberOfSuccessLines, int* numberOfErrorLines, int* numberOfLines) {
-    while (!feof(file)) {
-        FileLine currentLine;
-        char* line = (char*)malloc(LINE_MAX_LENGHT);
-        if (line == NULL) {
-            context->errorData = MemoryAllocationError;
-            *freeList = 1;
-            break;
-        } else {
-            int successRead = readline(file, line);
-            if (successRead && addLineToStruct(line, &currentLine)) {
-                *numberOfSuccessLines+=1;
-                pushEnd(list, currentLine);
-            } else {
-                *numberOfErrorLines+=1;
-            }
-            *numberOfLines+=1;
-            free(line);
-        }
-    }
 }
 
 void calculate(AppContext* context) {

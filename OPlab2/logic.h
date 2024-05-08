@@ -9,7 +9,7 @@
 #include <cctype>
 #include <cmath>
 #include "list.h"
-#include "errors.h"
+#include "error.h"
 
 #define INITIALIZE_METRICS_VALUE 0
 
@@ -31,7 +31,6 @@ int countRegionAppear(List* table, char* region);
 double returnField(Node* p, int column);
 double findfirstAppearance(List* table, char* region, int column);
 
-void fillList(FILE* file, List* list, AppContext* context, int* freeList, int* numberOfSuccessLines, int* numberOfErrorLines, int* numberOfLines);
 int isInt(char* str);
 int isDouble(char* str);
 int stringToInt(char* string);

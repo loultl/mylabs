@@ -21,7 +21,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::onSelectFileButtonClicked() {
     AppParams param;
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Выберите CSV файл"), "", tr("CSV файлы (*.csv);;Все файлы (*.*)"));
+    QString fileName = QFileDialog::getOpenFileName(this, "Выберите CSV файл", "", "CSV файлы (*.csv)");
     std::string stdStr = fileName.toStdString();
     const char* cStr = stdStr.c_str();
     strcpy(param.fileName, cStr);
@@ -40,7 +40,7 @@ void MainWindow::onLoadDataButtonClicked() {
 }
 
 void MainWindow::onCalculateMetricsClicked() {
-    AppParams param;
+    /*AppParams param;
     std::string stdStrRegion = ui->regionLineEdit->text().toStdString();
     const char* cStrRegion = stdStrRegion.c_str();
     strcpy(param.region, cStrRegion);
@@ -49,7 +49,7 @@ void MainWindow::onCalculateMetricsClicked() {
     strcpy(param.column, cStrColumn);
     doOperation(SetRegion, &context, &param);
     doOperation(SetIndex, &context, &param);
-    doOperation(Calculation, &context, NULL);
+    doOperation(Calculation, &context, NULL);*/
     updateLabels();
 }
 
@@ -94,14 +94,22 @@ void MainWindow::errorsHandler() {
 }
 
 void MainWindow::setTable() {
-    ui->tableWidget->setRowCount(0);
-    ui->tableWidget->setColumnCount(7);
-
+    qDebug() << context.tableHeader;
+    char* tableHeader = context.tableHeader;
     QStringList headers;
-    headers << "Year" << "Region" << "Natural Population Growth" << "Birth Rate" << "Death Rate" << "General Demographic Weight" << "Urbanisation";
+    char* token = strtok(tableHeader, ",");
+    int columnCount = 0;
+    while (token != NULL)
+    {
+        headers << token;
+        token = strtok(NULL, ",");
+        columnCount++;
+    }
+    qDebug() << context.tableHeader;
+    ui->tableWidget->setRowCount(INIT_ROWS);
+    ui->tableWidget->setColumnCount(columnCount);
     ui->tableWidget->setHorizontalHeaderLabels(headers);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
     Node* current = context.table->first;
     if (!strcmp(context.region, "")) {
         setFullTable(current);

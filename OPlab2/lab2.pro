@@ -19,7 +19,7 @@ SOURCES += \
 HEADERS += \
     appcontext.h \
     entrypoint.h \
-    errors.h \
+    error.h \
     list.h \
     logic.h \
     mainwindow.h
