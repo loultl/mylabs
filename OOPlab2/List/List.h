@@ -18,6 +18,7 @@ public:
     ~List();
     size_t getLength() const;
     void add(const T& elem);
+    void insert(const T& elem, size_t index);
     void addRange(const List<T>& lst);
     void addRange(T* arr, int size);
     void setElem(int index, const T& elem);
@@ -25,10 +26,13 @@ public:
     void removeElem(int index);
     List<T> combine(const List<T>& lst);
     void sort(int (*comp)(const T& r1, const T& r2));
+    void reverse();
     int getIndex(T &elem) const;
     T* toArray();
     static int compare(const T& a, const T& b);
     T& operator[](int index);
+    List<T> operator +(const List<T>& lst);
+    List<T>& operator+=(const List<T>& lst);
     List<T>& operator =(const List<T>& lst);
     Iterator<T> begin() const noexcept { return Iterator<T>(first, count); }
     Iterator<T> end() const noexcept { return Iterator<T>(first, count, *count); }
@@ -81,6 +85,17 @@ List<T>& List<T>::operator=(const List<T>& lst) {
 }
 
 template <typename T>
+List<T> List<T>::operator+(const List<T>& list) {
+    return combine(list);
+}
+
+template <typename T>
+List<T>& List<T>::operator+=(const List<T>& list) {
+    addRange(list);
+    return *this;
+}
+
+template <typename T>
 size_t List<T>::getLength() const {
     return *count;
 }
@@ -99,6 +114,28 @@ void List<T>::add(const T& elem) {
         temp->next = node;
     }
     (*count)++;
+}
+
+template <typename T>
+void List<T>::insert(const T& elem, size_t index) {
+    auto p = first;
+    auto node = std::make_shared<Node<T>>();
+    node->data = elem;
+    if (getLength() < index || index < 0) {
+        throw IndexError(INDEX_ERROR);
+    }
+    if (getLength() == index) {
+        add(elem);
+    } else {
+        for (int i = 0;i < index - 1;i++) {
+            p = p->next;
+        }
+        auto next = p->next;
+        p->next = node;
+        node->next = next;
+        (*count)++;
+    }
+
 }
 
 template <typename T>
@@ -192,6 +229,24 @@ void List<T>::sort(int (*comp)(const T& r1, const T& r2)) {
             ptr2 = ptr2->next;
         }
     } while (swapped);
+}
+
+template <typename T>
+void List<T>::reverse() {
+    if (getLength() <= 1) return;
+
+    std::shared_ptr<Node<T>> prev = nullptr;
+    std::shared_ptr<Node<T>> current = first;
+    std::shared_ptr<Node<T>> next = nullptr;
+
+    while (current != nullptr) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+
+    first = prev;
 }
 
 template <typename T>

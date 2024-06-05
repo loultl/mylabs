@@ -13,11 +13,12 @@ private:
     Point firstCoord;
     Point secondCoord;
     Point thirdCoord;
+    double perimeterTriangle;
 public:
-    Triangle(std::string n, Point c1, Point c2, Point c3);
-    void showParams() override;
-    void showPerimeter() override;
-    double findPerimeter() override;
+    Triangle(std::string n, Point &c1, Point &c2, Point &c3, double perimeter);
+    std::string getParameters() override;
+    std::string getPerimeters() override;
+    double getPerimeter() override;
 };
 
 #endif //FIRST_LAB_TRIANGLE_H

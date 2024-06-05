@@ -12,11 +12,12 @@ class Rectangle: public Shape {
 private:
     Point upperLeftCornerCoord;
     Point lowerRightCornerCoord;
+    double perimeterRectangle = getPerimeter();
 public:
-    Rectangle(std::string n, Point c1, Point c2);
-    void showParams() override;
-    void showPerimeter() override;
-    double findPerimeter() override;
+    Rectangle(std::string n, Point &c1, Point &c2, double perimeter);
+    std::string getParameters() override;
+    std::string getPerimeters() override;
+    double getPerimeter() override;
 };
 
 #endif //FIRST_LAB_RECTANGLE_H

@@ -20,6 +20,7 @@
 #define EMPTY_TABLE_ERROR "В таблице нет данных, невозможно посчитать параметры"
 #define ALLOCATION_ERROR "Память не может быть выделена"
 #define INIT_ROWS 0
+#define INIT_TABLE_HEADER_LENGHT 1024
 
 
 QT_BEGIN_NAMESPACE

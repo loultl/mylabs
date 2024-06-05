@@ -42,7 +42,6 @@ void load(AppContext* context) {
 
             readline(file, fline);
             strcpy(context->tableHeader, fline);
-            qDebug() << context->tableHeader;
             free(fline);
 
             char* line = (char*)malloc(LINE_MAX_LENGHT);

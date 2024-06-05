@@ -11,8 +11,6 @@ add_executable(first_lab main.cpp
         Shape/Triangle/Triangle.h
         Shape/Rectangle/Rectangle.cpp
         Shape/Rectangle/Rectangle.h
-        Shape/Polygon/Polygon.cpp
-        Shape/Polygon/Polygon.h
         Shape/Circle/Circle.cpp
         Shape/Circle/Circle.h
         Point/Point.cpp
@@ -20,6 +18,6 @@ add_executable(first_lab main.cpp
         Exceptions/ShapeExistanceException.h
         Exceptions/EmptyList.h
         Exceptions/BadShapeName.h
-        Exceptions/BadIndexForDeletion.h
+        Exceptions/BadShapeNumberForDeletion.h
         Exceptions/BadInputType.h
         Exceptions/InterfaceOptionException.h)

@@ -17,14 +17,22 @@ GraphicWindow::~GraphicWindow()
 void GraphicWindow::resizeEvent(QResizeEvent *evt)
 {
 
-    QPixmap bkgnd(*pix);
+    /*QPixmap bkgnd(*pix);
     bkgnd = bkgnd.scaled(size(), Qt::IgnoreAspectRatio);
     QPalette p = palette();
     p.setBrush(QPalette::Window, bkgnd);
     setPalette(p);
+    QDialog::resizeEvent(evt);*/
 
+    QPixmap bkgnd(*pix);
+    bkgnd = bkgnd.scaled(size(), Qt::IgnoreAspectRatio);
+    width = size().width();
+    height = size().height();
+    QPalette p = palette();
+    p.setBrush(QPalette::Window, bkgnd);
+    setPalette(p);
+    paintEvent();
     QDialog::resizeEvent(evt);
-
 }
 
 void GraphicWindow::paintEvent() {

@@ -8,4 +8,4 @@ double Point::getX() { return x; }
 
 double Point::getY() { return y; }
 
-Point::Point(double cX, double cY) : x(cX), y(cY) {}
+Point::Point(double coorX, double coorY) : x(coorX), y(coorY) {}

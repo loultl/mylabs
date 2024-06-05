@@ -4,26 +4,31 @@
 
 #include "Rectangle.h"
 
-Rectangle::Rectangle(std::string n, Point c1, Point c2): upperLeftCornerCoord(c1), lowerRightCornerCoord(c2){
+Rectangle::Rectangle(std::string n, Point &c1, Point &c2, double perimeter): upperLeftCornerCoord(c1), lowerRightCornerCoord(c2), perimeterRectangle(perimeter) {
     if (upperLeftCornerCoord.getX() == lowerRightCornerCoord.getX() || upperLeftCornerCoord.getY() == lowerRightCornerCoord.getY()) {
         throw ShapeExistanceException(SHAPE_EXISTANCE_ERROR);
     }
+    double width = fabs(lowerRightCornerCoord.getX() - upperLeftCornerCoord.getX());
+    double height = fabs(lowerRightCornerCoord.getY() - upperLeftCornerCoord.getY());
+    perimeterRectangle = 2 * (width + height);
     name = std::move(n);
 }
 
-void Rectangle::showParams() {
-    std::cout << "Name: " << name << "\n";
-    std::cout << "Type: Rectangle\n";
-    std::cout << "Lower left corner coordinate: (" << upperLeftCornerCoord.getX() << "," << upperLeftCornerCoord.getY() << ")\n";
-    std::cout << "Upper right corner coordinate: (" << lowerRightCornerCoord.getX() << "," << lowerRightCornerCoord.getY() << ")\n";
+std::string Rectangle::getParameters() {
+    std::string stringForParameters;
+    stringForParameters += "Name: " + name + "\n" + "Type: Rectangle\n";
+    stringForParameters += "Lower left corner coordinate: (" + std::to_string(upperLeftCornerCoord.getX()) + "," + std::to_string(upperLeftCornerCoord.getY()) + ")\n";
+    stringForParameters += "Lower left corner coordinate: (" + std::to_string(lowerRightCornerCoord.getX()) + "," + std::to_string(lowerRightCornerCoord.getY()) + ")\n";
+    return stringForParameters;
 }
 
-double Rectangle::findPerimeter() {
-    return 2*(fabs(upperLeftCornerCoord.getY() - lowerRightCornerCoord.getY()) + fabs(upperLeftCornerCoord.getX() - lowerRightCornerCoord.getX()));
+double Rectangle::getPerimeter() {
+    return perimeterRectangle;
 }
 
-void Rectangle::showPerimeter() {
-    std::cout << "Name: " << name << "\n";
-    std::cout << "Type: Rectangle\n";
-    std::cout << "Perimeter: " << findPerimeter() << "\n";
+std::string Rectangle::getPerimeters() {
+    std::string stringForPerimeters;
+    stringForPerimeters += "Name: " + name + "\n" + "Type: Rectangle\n";
+    stringForPerimeters += "Perimeter: " + std::to_string(getPerimeter()) + "\n";
+    return stringForPerimeters;
 }

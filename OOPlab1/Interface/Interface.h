@@ -14,14 +14,29 @@
 #include "../Shape/Shape.h"
 #include "../Shape/Triangle/Triangle.h"
 #include "../Shape/Rectangle/Rectangle.h"
-#include "../Shape/Polygon/Polygon.h"
 #include "../Shape/Circle/Circle.h"
 #include "../Exceptions/ShapeExistanceException.h"
 #include "../Exceptions/InterfaceOptionException.h"
 #include "../Exceptions/BadShapeName.h"
-#include "../Exceptions/BadIndexForDeletion.h"
+#include "../Exceptions/BadShapeNumberForDeletion.h"
 #include "../Exceptions/BadInputType.h"
 #include "../Exceptions/EmptyList.h"
+
+#define RUNNING_INTERFACE 1
+#define STOP_INTERFACE 0
+
+#define ADD_TRIANGLE_KEY 1
+#define ADD_RECTANGLE_KEY 2
+#define ADD_CIRCLE_KEY 3
+
+#define ADD_SHAPE_KEY 1
+#define PRINT_SHAPES_WITH_PARAMETERS_KEY 2
+#define PRINT_SHAPES_WITH_PERIMETERS_KEY 3
+#define PRINT_SUM_OF_PERIMETERS_KEY 4
+#define SORT_SHAPES_KEY 5
+#define DELETE_SHAPE_BY_NUMBER_KEY 6
+#define DELETE_SHAPE_BY_PERIMETER_KEY 7
+#define EXIT_INTERFACE_KEY 8
 
 class Interface {
 private:
@@ -30,7 +45,6 @@ private:
     void callMethod(const int& methodName);
     void callShapeMethod(const int& methodName);
 
-    int interfaceRunningStatus;
     std::vector<Shape*> shapes;
     std::map<int, MethodPtr> interfaceOptions;
     std::map<int, MethodPtr> figuresOptions;
@@ -41,7 +55,7 @@ private:
     void showPerimeters();
     void printSumOfPerimeters();
     void sortShapesByPerimeter();
-    void deleteShapeByIndex();
+    void deleteShapeByNumber();
     void deleteShapesByPerimeter();
     void initializeInterfaceOptions();
     void initializeShapesOptions();
@@ -50,20 +64,26 @@ private:
     void addTriangle();
     void addCircle();
     void addRectangle();
-    void addPolygon();
 
     Circle* getCircle();
     Triangle* getTriangle();
     Rectangle* getRectangle();
-    Polygon* getPolygon();
 
-    template<typename T>
-    T getValue();
     int checkForInt(int &choice);
     static bool comparePerimeter(Shape* f1, Shape* f2);
 
-public:
     void runInterface();
+    int interfaceRunningStatus;
+
+    template<typename T>
+    T getValue();
+
+public:
+    Interface() : interfaceRunningStatus(RUNNING_INTERFACE) {
+        initializeInterfaceOptions();
+        initializeShapesOptions();
+        runInterface();
+    }
 };
 
 #endif //FIRST_LAB_INTERFACE_H

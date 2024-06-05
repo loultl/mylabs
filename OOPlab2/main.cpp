@@ -1,6 +1,8 @@
 #include "Testing/Testing.h"
+#include "OldTesting/OldTesting.h"
+
 int main()
 {
-    startTesting();
+    startTest();
     return 0;
 }

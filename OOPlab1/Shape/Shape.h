@@ -14,14 +14,16 @@
 #include "../Exceptions/ShapeExistanceException.h"
 #include "../Point/Point.h"
 
+#define INIT_PERIMETER 0
+
 class Shape {
 protected:
     std::string name;
 public:
     virtual ~Shape() = default;
-    virtual double findPerimeter() = 0;
-    virtual void showParams() = 0;
-    virtual void showPerimeter() = 0;
+    virtual double getPerimeter() = 0;
+    virtual std::string getParameters() = 0;
+    virtual std::string getPerimeters() = 0;
 };
 
 #endif //FIRST_LAB_SHAPE_H

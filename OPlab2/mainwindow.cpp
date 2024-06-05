@@ -40,7 +40,7 @@ void MainWindow::onLoadDataButtonClicked() {
 }
 
 void MainWindow::onCalculateMetricsClicked() {
-    /*AppParams param;
+    AppParams param;
     std::string stdStrRegion = ui->regionLineEdit->text().toStdString();
     const char* cStrRegion = stdStrRegion.c_str();
     strcpy(param.region, cStrRegion);
@@ -49,7 +49,7 @@ void MainWindow::onCalculateMetricsClicked() {
     strcpy(param.column, cStrColumn);
     doOperation(SetRegion, &context, &param);
     doOperation(SetIndex, &context, &param);
-    doOperation(Calculation, &context, NULL);*/
+    doOperation(Calculation, &context, NULL);
     updateLabels();
 }
 
@@ -94,8 +94,8 @@ void MainWindow::errorsHandler() {
 }
 
 void MainWindow::setTable() {
-    qDebug() << context.tableHeader;
-    char* tableHeader = context.tableHeader;
+    char* tableHeader = (char*)malloc(INIT_TABLE_HEADER_LENGHT);
+    strcpy(tableHeader, context.tableHeader);
     QStringList headers;
     char* token = strtok(tableHeader, ",");
     int columnCount = 0;
@@ -105,7 +105,6 @@ void MainWindow::setTable() {
         token = strtok(NULL, ",");
         columnCount++;
     }
-    qDebug() << context.tableHeader;
     ui->tableWidget->setRowCount(INIT_ROWS);
     ui->tableWidget->setColumnCount(columnCount);
     ui->tableWidget->setHorizontalHeaderLabels(headers);
@@ -116,6 +115,7 @@ void MainWindow::setTable() {
     } else {
         setRegionTable(current);
     }
+    free(tableHeader);
 }
 
 void MainWindow::setFullTable(Node* current) {
